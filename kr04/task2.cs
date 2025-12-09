@@ -8,7 +8,7 @@ class Program
         Console.WriteLine("Объект создан");
         // ничего не удаляет
         GC.Collect();
-        // удаляем ссылку
+        // удаляем ссылку на объект
         obj = null;
         // удаляет объект
         GC.Collect();
