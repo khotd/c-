@@ -1,0 +1,12 @@
+{
+  "FirstName": "\u0414\u0438\u0430\u043D\u0430",
+  "LastName": "\u0425\u043E\u0442\u0435\u0435\u0432\u0430",
+  "Age": 18,
+  "personId": "b2b05d80-1a9d-4568-8a37-74368b05a91c",
+  "BirthDate": "0001-01-01T00:00:00",
+  "Email": "mail@example.com",
+  "phone": "\u002B7-999-123-45-67",
+  "FullName": "\u0414\u0438\u0430\u043D\u0430 \u0425\u043E\u0442\u0435\u0435\u0432\u0430",
+  "IsAdult": true,
+  "_birthDate": "0001-01-01T00:00:00"
+}
