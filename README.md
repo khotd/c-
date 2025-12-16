@@ -26,8 +26,5 @@
 1. xUnit 2.6.3 - фреймворк для unit-тестирования
 2. Microsoft.NET.Test.Sdk 17.8.0 - SDK для тестирования
 
-Запуск демонстрации:
-dotnet run
-
 Запуск тестов:
 dotnet test
