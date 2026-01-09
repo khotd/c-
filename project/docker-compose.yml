@@ -1,0 +1,74 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: animal-shelter-db
+    environment:
+      POSTGRES_USER: project
+      POSTGRES_PASSWORD: project
+      POSTGRES_DB: projectDB
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U project -d projectDB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: animal-shelter-redis
+    ports:
+      - "6380:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  liquibase:
+    build:
+      context: ./liquibase
+      dockerfile: Dockerfile
+    container_name: animal-shelter-liquibase
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./liquibase:/liquibase/changelog
+    command: >
+      --url=jdbc:postgresql://db:5432/projectDB
+      --username=project
+      --password=project
+      --changeLogFile=changelog-root.yaml
+      update
+    restart: on-failure
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: animal-shelter-web
+    ports:
+      - "8081:80"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      liquibase:
+        condition: service_completed_successfully
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=projectDB;Username=project;Password=project
+      - ConnectionStrings__Redis=redis:6379
+      - Redis__Configuration=redis:6379
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
