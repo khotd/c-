@@ -1,0 +1,2 @@
+-- Initial schema setup
+-- This file is kept for backward compatibility
