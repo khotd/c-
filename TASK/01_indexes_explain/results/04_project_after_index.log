@@ -1,0 +1,28 @@
+﻿CREATE INDEX
+ANALYZE
+                                                                 QUERY PLAN                                                                 
+--------------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on adoptions  (cost=4.58..51.20 rows=12 width=66) (actual time=0.048..0.063 rows=13 loops=1)
+   Recheck Cond: ((user_id = 2) AND ((status)::text = 'Pending'::text) AND (created_at >= (now() - '365 days'::interval)))
+   Heap Blocks: exact=13
+   ->  Bitmap Index Scan on idx_adoptions_user_status_created  (cost=0.00..4.58 rows=12 width=0) (actual time=0.042..0.043 rows=13 loops=1)
+         Index Cond: ((user_id = 2) AND ((status)::text = 'Pending'::text) AND (created_at >= (now() - '365 days'::interval)))
+ Planning Time: 0.602 ms
+ Execution Time: 0.115 ms
+(7 rows)
+
+                                                                       QUERY PLAN                                                                        
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=369.97..370.10 rows=50 width=66) (actual time=0.132..0.137 rows=50 loops=1)
+   ->  Sort  (cost=369.97..370.22 rows=100 width=66) (actual time=0.131..0.133 rows=50 loops=1)
+         Sort Key: created_at DESC
+         Sort Method: quicksort  Memory: 37kB
+         ->  Bitmap Heap Scan on adoptions  (cost=5.20..366.65 rows=100 width=66) (actual time=0.029..0.104 rows=92 loops=1)
+               Recheck Cond: (user_id = 2)
+               Heap Blocks: exact=88
+               ->  Bitmap Index Scan on idx_adoptions_user_status_created  (cost=0.00..5.17 rows=100 width=0) (actual time=0.017..0.017 rows=92 loops=1)
+                     Index Cond: (user_id = 2)
+ Planning Time: 0.121 ms
+ Execution Time: 0.198 ms
+(11 rows)
+

@@ -1,0 +1,37 @@
+GROWTH 100k NOINDEX
+ count  
+--------
+ 100000
+(1 row)
+
+                                                   QUERY PLAN                                                   
+----------------------------------------------------------------------------------------------------------------
+ Seq Scan on adoptions_growth  (cost=0.00..2084.00 rows=20 width=39) (actual time=0.155..5.952 rows=20 loops=1)
+   Filter: (user_id = 2)
+   Rows Removed by Filter: 99980
+ Planning Time: 0.215 ms
+ Execution Time: 5.967 ms
+(5 rows)
+
+                                                     QUERY PLAN                                                      
+---------------------------------------------------------------------------------------------------------------------
+ Seq Scan on adoptions_growth  (cost=0.00..3084.00 rows=4293 width=39) (actual time=0.007..20.357 rows=4289 loops=1)
+   Filter: ((created_at < now()) AND (created_at >= (now() - '30 days'::interval)))
+   Rows Removed by Filter: 95711
+ Planning Time: 0.173 ms
+ Execution Time: 20.508 ms
+(5 rows)
+
+                                                         QUERY PLAN                                                         
+----------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=2084.43..2084.48 rows=20 width=39) (actual time=5.835..5.838 rows=20 loops=1)
+   ->  Sort  (cost=2084.43..2084.48 rows=20 width=39) (actual time=5.834..5.836 rows=20 loops=1)
+         Sort Key: created_at DESC
+         Sort Method: quicksort  Memory: 26kB
+         ->  Seq Scan on adoptions_growth  (cost=0.00..2084.00 rows=20 width=39) (actual time=0.114..5.736 rows=20 loops=1)
+               Filter: (user_id = 2)
+               Rows Removed by Filter: 99980
+ Planning Time: 0.158 ms
+ Execution Time: 5.872 ms
+(9 rows)
+

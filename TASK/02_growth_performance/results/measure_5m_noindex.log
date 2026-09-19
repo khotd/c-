@@ -1,0 +1,86 @@
+=== SIZE 5m ===
+  rows   
+---------
+ 5000000
+(1 row)
+
+ table_size 
+------------
+ 326 MB
+(1 row)
+
+ total_size 
+------------
+ 433 MB
+(1 row)
+
+=== SELECT no index user_id=5m ===
+                                                      QUERY PLAN                                                       
+-----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..68713.58 rows=50 width=36) (actual time=3.564..104.568 rows=47 loops=1)
+   Workers Planned: 2
+   Workers Launched: 2
+   ->  Parallel Seq Scan on events  (cost=0.00..67708.58 rows=21 width=36) (actual time=1.873..98.198 rows=16 loops=3)
+         Filter: (user_id = 123)
+         Rows Removed by Filter: 1666651
+ Planning Time: 0.145 ms
+ Execution Time: 104.603 ms
+(8 rows)
+
+=== RANGE created_at 5m ===
+                                                         QUERY PLAN                                                         
+----------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..80464.52 rows=13393 width=36) (actual time=0.486..421.036 rows=13753 loops=1)
+   Workers Planned: 2
+   Workers Launched: 2
+   ->  Parallel Seq Scan on events  (cost=0.00..78125.22 rows=5580 width=36) (actual time=0.072..411.973 rows=4584 loops=3)
+         Filter: (created_at >= (now() - '1 day'::interval))
+         Rows Removed by Filter: 1662082
+ Planning Time: 0.205 ms
+ Execution Time: 421.918 ms
+(8 rows)
+
+=== ORDER BY 5m ===
+                                                             QUERY PLAN                                                             
+------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=68709.07..68713.97 rows=42 width=36) (actual time=109.439..113.374 rows=47 loops=1)
+   ->  Gather Merge  (cost=68709.07..68713.97 rows=42 width=36) (actual time=109.438..113.367 rows=47 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         ->  Sort  (cost=67709.04..67709.10 rows=21 width=36) (actual time=105.647..105.650 rows=16 loops=3)
+               Sort Key: created_at DESC
+               Sort Method: quicksort  Memory: 26kB
+               Worker 0:  Sort Method: quicksort  Memory: 26kB
+               Worker 1:  Sort Method: quicksort  Memory: 26kB
+               ->  Parallel Seq Scan on events  (cost=0.00..67708.58 rows=21 width=36) (actual time=2.014..105.424 rows=16 loops=3)
+                     Filter: (user_id = 123)
+                     Rows Removed by Filter: 1666651
+ Planning Time: 0.182 ms
+ Execution Time: 113.482 ms
+(14 rows)
+
+=== AGG 5m ===
+                                                                   QUERY PLAN                                                                    
+-------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize GroupAggregate  (cost=79979.98..79980.99 rows=4 width=15) (actual time=322.388..326.318 rows=4 loops=1)
+   Group Key: event_type
+   ->  Gather Merge  (cost=79979.98..79980.91 rows=8 width=15) (actual time=322.382..326.308 rows=12 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         ->  Sort  (cost=78979.96..78979.97 rows=4 width=15) (actual time=318.356..318.357 rows=4 loops=3)
+               Sort Key: event_type
+               Sort Method: quicksort  Memory: 25kB
+               Worker 0:  Sort Method: quicksort  Memory: 25kB
+               Worker 1:  Sort Method: quicksort  Memory: 25kB
+               ->  Partial HashAggregate  (cost=78979.88..78979.92 rows=4 width=15) (actual time=318.299..318.301 rows=4 loops=3)
+                     Group Key: event_type
+                     Batches: 1  Memory Usage: 24kB
+                     Worker 0:  Batches: 1  Memory Usage: 24kB
+                     Worker 1:  Batches: 1  Memory Usage: 24kB
+                     ->  Parallel Seq Scan on events  (cost=0.00..78125.22 rows=170932 width=7) (actual time=0.034..294.987 rows=137065 loops=3)
+                           Filter: (created_at >= (now() - '30 days'::interval))
+                           Rows Removed by Filter: 1529601
+ Planning Time: 0.160 ms
+ Execution Time: 326.473 ms
+(20 rows)
+

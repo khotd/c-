@@ -1,0 +1,86 @@
+=== SIZE 1m ===
+  rows   
+---------
+ 1000000
+(1 row)
+
+ table_size 
+------------
+ 65 MB
+(1 row)
+
+ total_size 
+------------
+ 87 MB
+(1 row)
+
+=== SELECT no index user_id=1m ===
+                                                     QUERY PLAN                                                      
+---------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..14543.43 rows=11 width=36) (actual time=2.581..20.708 rows=8 loops=1)
+   Workers Planned: 2
+   Workers Launched: 2
+   ->  Parallel Seq Scan on events  (cost=0.00..13542.33 rows=5 width=36) (actual time=3.786..15.399 rows=3 loops=3)
+         Filter: (user_id = 123)
+         Rows Removed by Filter: 333331
+ Planning Time: 0.202 ms
+ Execution Time: 20.731 ms
+(8 rows)
+
+=== RANGE created_at 1m ===
+                                                        QUERY PLAN                                                        
+--------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..16906.47 rows=2808 width=36) (actual time=0.238..55.181 rows=2737 loops=1)
+   Workers Planned: 2
+   Workers Launched: 2
+   ->  Parallel Seq Scan on events  (cost=0.00..15625.67 rows=1170 width=36) (actual time=0.046..49.096 rows=912 loops=3)
+         Filter: (created_at >= (now() - '1 day'::interval))
+         Rows Removed by Filter: 332421
+ Planning Time: 0.102 ms
+ Execution Time: 55.299 ms
+(8 rows)
+
+=== ORDER BY 1m ===
+                                                           QUERY PLAN                                                            
+---------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=14542.42..14543.58 rows=10 width=36) (actual time=19.576..23.475 rows=8 loops=1)
+   ->  Gather Merge  (cost=14542.42..14543.58 rows=10 width=36) (actual time=19.574..23.471 rows=8 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         ->  Sort  (cost=13542.39..13542.40 rows=5 width=36) (actual time=16.692..16.693 rows=3 loops=3)
+               Sort Key: created_at DESC
+               Sort Method: quicksort  Memory: 25kB
+               Worker 0:  Sort Method: quicksort  Memory: 25kB
+               Worker 1:  Sort Method: quicksort  Memory: 25kB
+               ->  Parallel Seq Scan on events  (cost=0.00..13542.33 rows=5 width=36) (actual time=6.214..16.533 rows=3 loops=3)
+                     Filter: (user_id = 123)
+                     Rows Removed by Filter: 333331
+ Planning Time: 0.143 ms
+ Execution Time: 23.595 ms
+(14 rows)
+
+=== AGG 1m ===
+                                                                  QUERY PLAN                                                                  
+----------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize GroupAggregate  (cost=16793.52..16794.53 rows=4 width=15) (actual time=58.494..61.928 rows=4 loops=1)
+   Group Key: event_type
+   ->  Gather Merge  (cost=16793.52..16794.45 rows=8 width=15) (actual time=58.487..61.918 rows=12 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         ->  Sort  (cost=15793.49..15793.50 rows=4 width=15) (actual time=55.581..55.582 rows=4 loops=3)
+               Sort Key: event_type
+               Sort Method: quicksort  Memory: 25kB
+               Worker 0:  Sort Method: quicksort  Memory: 25kB
+               Worker 1:  Sort Method: quicksort  Memory: 25kB
+               ->  Partial HashAggregate  (cost=15793.41..15793.45 rows=4 width=15) (actual time=55.528..55.529 rows=4 loops=3)
+                     Group Key: event_type
+                     Batches: 1  Memory Usage: 24kB
+                     Worker 0:  Batches: 1  Memory Usage: 24kB
+                     Worker 1:  Batches: 1  Memory Usage: 24kB
+                     ->  Parallel Seq Scan on events  (cost=0.00..15625.67 rows=33549 width=7) (actual time=0.014..51.557 rows=27350 loops=3)
+                           Filter: (created_at >= (now() - '30 days'::interval))
+                           Rows Removed by Filter: 305983
+ Planning Time: 0.127 ms
+ Execution Time: 62.028 ms
+(20 rows)
+

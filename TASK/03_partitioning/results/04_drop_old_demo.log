@@ -1,0 +1,25 @@
+﻿=== Before drop: oldest partitions ===
+      relname      
+-------------------
+ adoptions_2024_01
+ adoptions_2024_02
+ adoptions_2024_03
+ adoptions_2024_04
+ adoptions_2024_05
+(5 rows)
+
+DROP TABLE
+DROP TABLE
+=== After drop ===
+      relname      
+-------------------
+ adoptions_2024_03
+ adoptions_2024_04
+ adoptions_2024_05
+ adoptions_2024_06
+ adoptions_2024_07
+ adoptions_2024_08
+ adoptions_2024_09
+ adoptions_2024_10
+(8 rows)
+

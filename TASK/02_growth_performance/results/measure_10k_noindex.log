@@ -1,0 +1,63 @@
+=== SIZE 10k ===
+ rows  
+-------
+ 10000
+(1 row)
+
+ table_size 
+------------
+ 672 kB
+(1 row)
+
+ total_size 
+------------
+ 944 kB
+(1 row)
+
+=== SELECT no index user_id=10k ===
+                                            QUERY PLAN                                             
+---------------------------------------------------------------------------------------------------
+ Seq Scan on events  (cost=0.00..209.00 rows=1 width=36) (actual time=0.428..0.429 rows=0 loops=1)
+   Filter: (user_id = 123)
+   Rows Removed by Filter: 10000
+ Planning Time: 0.130 ms
+ Execution Time: 0.437 ms
+(5 rows)
+
+=== RANGE created_at 10k ===
+                                             QUERY PLAN                                              
+-----------------------------------------------------------------------------------------------------
+ Seq Scan on events  (cost=0.00..259.00 rows=30 width=36) (actual time=0.029..1.172 rows=36 loops=1)
+   Filter: (created_at >= (now() - '1 day'::interval))
+   Rows Removed by Filter: 9964
+ Planning Time: 0.078 ms
+ Execution Time: 1.179 ms
+(5 rows)
+
+=== ORDER BY 10k ===
+                                                  QUERY PLAN                                                   
+---------------------------------------------------------------------------------------------------------------
+ Limit  (cost=209.01..209.01 rows=1 width=36) (actual time=0.379..0.380 rows=0 loops=1)
+   ->  Sort  (cost=209.01..209.01 rows=1 width=36) (actual time=0.378..0.379 rows=0 loops=1)
+         Sort Key: created_at DESC
+         Sort Method: quicksort  Memory: 25kB
+         ->  Seq Scan on events  (cost=0.00..209.00 rows=1 width=36) (actual time=0.351..0.351 rows=0 loops=1)
+               Filter: (user_id = 123)
+               Rows Removed by Filter: 10000
+ Planning Time: 0.102 ms
+ Execution Time: 0.399 ms
+(9 rows)
+
+=== AGG 10k ===
+                                                 QUERY PLAN                                                 
+------------------------------------------------------------------------------------------------------------
+ HashAggregate  (cost=263.24..263.28 rows=4 width=15) (actual time=1.354..1.355 rows=4 loops=1)
+   Group Key: event_type
+   Batches: 1  Memory Usage: 24kB
+   ->  Seq Scan on events  (cost=0.00..259.00 rows=848 width=7) (actual time=0.005..1.249 rows=845 loops=1)
+         Filter: (created_at >= (now() - '30 days'::interval))
+         Rows Removed by Filter: 9155
+ Planning Time: 0.078 ms
+ Execution Time: 1.387 ms
+(8 rows)
+

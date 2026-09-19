@@ -1,0 +1,76 @@
+=== 5m WITHINDEX ===
+           indexrelname           | pg_size_pretty 
+----------------------------------+----------------
+ events_5m_pkey                   | 107 MB
+ events_5m_user_id_idx            | 34 MB
+ events_5m_created_at_idx         | 107 MB
+ events_5m_user_id_created_at_idx | 150 MB
+(4 rows)
+
+=== SELECT ===
+                                                                QUERY PLAN                                                                 
+-------------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on events_5m  (cost=4.82..200.25 rows=50 width=36) (actual time=0.069..0.314 rows=36 loops=1)
+   Recheck Cond: (user_id = 123)
+   Heap Blocks: exact=36
+   ->  Bitmap Index Scan on events_5m_user_id_created_at_idx  (cost=0.00..4.81 rows=50 width=0) (actual time=0.051..0.052 rows=36 loops=1)
+         Index Cond: (user_id = 123)
+ Planning Time: 0.313 ms
+ Execution Time: 0.363 ms
+(7 rows)
+
+=== RANGE ===
+                                                                QUERY PLAN                                                                 
+-------------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on events_5m  (cost=224.96..26521.67 rows=11939 width=36) (actual time=3.905..71.927 rows=13669 loops=1)
+   Recheck Cond: (created_at >= (now() - '1 day'::interval))
+   Heap Blocks: exact=11730
+   ->  Bitmap Index Scan on events_5m_created_at_idx  (cost=0.00..221.98 rows=11939 width=0) (actual time=2.318..2.318 rows=13669 loops=1)
+         Index Cond: (created_at >= (now() - '1 day'::interval))
+ Planning Time: 0.182 ms
+ Execution Time: 72.510 ms
+(7 rows)
+
+=== ORDER ===
+                                                                      QUERY PLAN                                                                       
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=201.66..201.78 rows=50 width=36) (actual time=0.228..0.232 rows=36 loops=1)
+   ->  Sort  (cost=201.66..201.78 rows=50 width=36) (actual time=0.227..0.229 rows=36 loops=1)
+         Sort Key: created_at DESC
+         Sort Method: quicksort  Memory: 27kB
+         ->  Bitmap Heap Scan on events_5m  (cost=4.82..200.25 rows=50 width=36) (actual time=0.045..0.192 rows=36 loops=1)
+               Recheck Cond: (user_id = 123)
+               Heap Blocks: exact=36
+               ->  Bitmap Index Scan on events_5m_user_id_created_at_idx  (cost=0.00..4.81 rows=50 width=0) (actual time=0.030..0.030 rows=36 loops=1)
+                     Index Cond: (user_id = 123)
+ Planning Time: 0.168 ms
+ Execution Time: 0.286 ms
+(11 rows)
+
+=== AGG ===
+                                                                               QUERY PLAN                                                                               
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize GroupAggregate  (cost=53882.54..53883.55 rows=4 width=15) (actual time=153.106..157.641 rows=4 loops=1)
+   Group Key: event_type
+   ->  Gather Merge  (cost=53882.54..53883.47 rows=8 width=15) (actual time=153.093..157.627 rows=12 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         ->  Sort  (cost=52882.52..52882.53 rows=4 width=15) (actual time=149.039..149.041 rows=4 loops=3)
+               Sort Key: event_type
+               Sort Method: quicksort  Memory: 25kB
+               Worker 0:  Sort Method: quicksort  Memory: 25kB
+               Worker 1:  Sort Method: quicksort  Memory: 25kB
+               ->  Partial HashAggregate  (cost=52882.44..52882.48 rows=4 width=15) (actual time=148.991..148.993 rows=4 loops=3)
+                     Group Key: event_type
+                     Batches: 1  Memory Usage: 24kB
+                     Worker 0:  Batches: 1  Memory Usage: 24kB
+                     Worker 1:  Batches: 1  Memory Usage: 24kB
+                     ->  Parallel Bitmap Heap Scan on events_5m  (cost=7473.65..52050.93 rows=166302 width=7) (actual time=44.293..127.349 rows=137141 loops=3)
+                           Recheck Cond: (created_at >= (now() - '30 days'::interval))
+                           Heap Blocks: exact=15282
+                           ->  Bitmap Index Scan on events_5m_created_at_idx  (cost=0.00..7373.87 rows=399124 width=0) (actual time=41.321..41.322 rows=411424 loops=1)
+                                 Index Cond: (created_at >= (now() - '30 days'::interval))
+ Planning Time: 0.156 ms
+ Execution Time: 157.776 ms
+(22 rows)
+

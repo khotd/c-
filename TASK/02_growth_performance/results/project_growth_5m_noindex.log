@@ -1,0 +1,52 @@
+GROWTH 5m NOINDEX
+  count  
+---------
+ 5000000
+(1 row)
+
+                                                             QUERY PLAN                                                             
+------------------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..68807.88 rows=993 width=38) (actual time=0.446..115.422 rows=1000 loops=1)
+   Workers Planned: 2
+   Workers Launched: 2
+   ->  Parallel Seq Scan on adoptions_growth  (cost=0.00..67708.58 rows=414 width=38) (actual time=0.313..108.210 rows=333 loops=3)
+         Filter: (user_id = 2)
+         Rows Removed by Filter: 1666333
+ Planning Time: 0.243 ms
+ Execution Time: 115.533 ms
+(8 rows)
+
+                                                               QUERY PLAN                                                               
+----------------------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..111158.25 rows=216164 width=38) (actual time=12.717..453.321 rows=214317 loops=1)
+   Workers Planned: 2
+   Workers Launched: 2
+   ->  Parallel Seq Scan on adoptions_growth  (cost=0.00..88541.85 rows=90068 width=38) (actual time=7.817..416.260 rows=71439 loops=3)
+         Filter: ((created_at < now()) AND (created_at >= (now() - '30 days'::interval)))
+         Rows Removed by Filter: 1595228
+ Planning Time: 0.160 ms
+ JIT:
+   Functions: 6
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+   Timing: Generation 1.455 ms, Inlining 0.000 ms, Optimization 1.208 ms, Emission 21.945 ms, Total 24.609 ms
+ Execution Time: 484.283 ms
+(12 rows)
+
+                                                                   QUERY PLAN                                                                   
+------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=68722.36..68728.19 rows=50 width=38) (actual time=118.991..125.684 rows=50 loops=1)
+   ->  Gather Merge  (cost=68722.36..68818.97 rows=828 width=38) (actual time=118.989..125.677 rows=50 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         ->  Sort  (cost=67722.34..67723.37 rows=414 width=38) (actual time=104.383..104.386 rows=47 loops=3)
+               Sort Key: created_at DESC
+               Sort Method: top-N heapsort  Memory: 30kB
+               Worker 0:  Sort Method: top-N heapsort  Memory: 31kB
+               Worker 1:  Sort Method: top-N heapsort  Memory: 30kB
+               ->  Parallel Seq Scan on adoptions_growth  (cost=0.00..67708.58 rows=414 width=38) (actual time=0.283..104.032 rows=333 loops=3)
+                     Filter: (user_id = 2)
+                     Rows Removed by Filter: 1666333
+ Planning Time: 0.164 ms
+ Execution Time: 125.762 ms
+(14 rows)
+

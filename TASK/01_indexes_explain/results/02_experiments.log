@@ -1,0 +1,439 @@
+﻿=== T3 EXPLAIN ===
+                                          QUERY PLAN                                          
+----------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on orders  (cost=4.51..47.60 rows=11 width=53)
+   Recheck Cond: (user_id = 123)
+   ->  Bitmap Index Scan on idx_orders_user_status_created  (cost=0.00..4.51 rows=11 width=0)
+         Index Cond: (user_id = 123)
+(4 rows)
+
+=== T4 EXPLAIN ANALYZE ===
+                                                               QUERY PLAN                                                               
+----------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on orders  (cost=4.51..47.60 rows=11 width=53) (actual time=0.144..0.191 rows=4 loops=1)
+   Recheck Cond: (user_id = 123)
+   Heap Blocks: exact=4
+   ->  Bitmap Index Scan on idx_orders_user_status_created  (cost=0.00..4.51 rows=11 width=0) (actual time=0.109..0.110 rows=4 loops=1)
+         Index Cond: (user_id = 123)
+ Planning Time: 0.060 ms
+ Execution Time: 0.228 ms
+(7 rows)
+
+=== T5 full ===
+                                                    QUERY PLAN                                                     
+-------------------------------------------------------------------------------------------------------------------
+ Seq Scan on orders  (cost=0.00..20826.00 rows=1000000 width=53) (actual time=0.043..102.405 rows=1000000 loops=1)
+ Planning Time: 0.035 ms
+ Execution Time: 131.341 ms
+(3 rows)
+
+=== T5 amount>0 ===
+                                                   QUERY PLAN                                                    
+-----------------------------------------------------------------------------------------------------------------
+ Seq Scan on orders  (cost=0.00..23326.00 rows=999900 width=53) (actual time=0.014..171.800 rows=999998 loops=1)
+   Filter: (amount > '0'::numeric)
+   Rows Removed by Filter: 2
+ Planning Time: 0.201 ms
+ Execution Time: 209.295 ms
+(5 rows)
+
+=== T6 index user_id ===
+CREATE INDEX
+docker : NOTICE:  relation "idx_orders_user_id" already exists, skipping
+C:\Users\User\AppData\Local\Temp\ps-script-9d334448-4d9a-4eef-b961-e72586fc1717.ps1:84 знак:102
++ ... sql" -Raw | docker exec -i animal-shelter-db psql -U project -d proje ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (NOTICE:  relati...xists, skipping:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ANALYZE
+                                                               QUERY PLAN                                                               
+----------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on orders  (cost=4.51..47.60 rows=11 width=53) (actual time=0.027..0.032 rows=4 loops=1)
+   Recheck Cond: (user_id = 123)
+   Heap Blocks: exact=4
+   ->  Bitmap Index Scan on idx_orders_user_status_created  (cost=0.00..4.51 rows=11 width=0) (actual time=0.018..0.019 rows=4 loops=1)
+         Index Cond: (user_id = 123)
+ Planning Time: 0.392 ms
+ Execution Time: 0.100 ms
+(7 rows)
+
+=== T7 status ===
+CREATE INDEX
+NOTICE:  relation "idx_orders_status" already exists, skipping
+ANALYZE
+                                                              QUERY PLAN                                                               
+---------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on orders  (cost=2790.57..16736.16 rows=249567 width=53) (actual time=7.509..95.264 rows=250704 loops=1)
+   Recheck Cond: ((status)::text = 'PAID'::text)
+   Heap Blocks: exact=10826
+   ->  Bitmap Index Scan on idx_orders_status  (cost=0.00..2728.18 rows=249567 width=0) (actual time=5.877..5.878 rows=250704 loops=1)
+         Index Cond: ((status)::text = 'PAID'::text)
+ Planning Time: 0.333 ms
+ Execution Time: 103.660 ms
+(7 rows)
+
+                                                              QUERY PLAN                                                               
+---------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on orders  (cost=2776.75..16706.50 rows=248300 width=53) (actual time=8.102..66.515 rows=249979 loops=1)
+   Recheck Cond: ((status)::text = 'NEW'::text)
+   Heap Blocks: exact=10826
+   ->  Bitmap Index Scan on idx_orders_status  (cost=0.00..2714.68 rows=248300 width=0) (actual time=6.596..6.596 rows=249979 loops=1)
+         Index Cond: ((status)::text = 'NEW'::text)
+ Planning Time: 0.108 ms
+ Execution Time: 73.769 ms
+(7 rows)
+
+                                                              QUERY PLAN                                                               
+---------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on orders  (cost=2802.32..16760.41 rows=250567 width=53) (actual time=7.744..34.973 rows=249175 loops=1)
+   Recheck Cond: ((status)::text = 'DELIVERED'::text)
+   Heap Blocks: exact=10826
+   ->  Bitmap Index Scan on idx_orders_status  (cost=0.00..2739.68 rows=250567 width=0) (actual time=6.350..6.351 rows=249175 loops=1)
+         Index Cond: ((status)::text = 'DELIVERED'::text)
+ Planning Time: 0.106 ms
+ Execution Time: 41.595 ms
+(7 rows)
+
+                                                              QUERY PLAN                                                               
+---------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on orders  (cost=2814.07..16784.66 rows=251567 width=53) (actual time=7.176..33.427 rows=250142 loops=1)
+   Recheck Cond: ((status)::text = 'CANCELLED'::text)
+   Heap Blocks: exact=10826
+   ->  Bitmap Index Scan on idx_orders_status  (cost=0.00..2751.18 rows=251567 width=0) (actual time=5.808..5.809 rows=250142 loops=1)
+         Index Cond: ((status)::text = 'CANCELLED'::text)
+ Planning Time: 0.108 ms
+ Execution Time: 39.725 ms
+(7 rows)
+
+=== T8 distribution ===
+  status   | count  
+-----------+--------
+ CANCELLED | 250142
+ DELIVERED | 249175
+ NEW       | 249979
+ PAID      | 250704
+(4 rows)
+
+=== T9 range ===
+                                                              QUERY PLAN                                                              
+--------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on orders  (cost=175.17..11184.32 rows=9128 width=53) (actual time=3.324..8.351 rows=9686 loops=1)
+   Recheck Cond: (created_at > (now() - '7 days'::interval))
+   Heap Blocks: exact=6417
+   ->  Bitmap Index Scan on idx_orders_created_at  (cost=0.00..172.89 rows=9128 width=0) (actual time=2.562..2.563 rows=9686 loops=1)
+         Index Cond: (created_at > (now() - '7 days'::interval))
+ Planning Time: 0.271 ms
+ Execution Time: 8.719 ms
+(7 rows)
+
+NOTICE:  relation "idx_orders_created_at" already exists, skipping
+CREATE INDEX
+ANALYZE
+                                                              QUERY PLAN                                                               
+---------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on orders  (cost=190.10..11419.47 rows=10022 width=53) (actual time=1.860..6.382 rows=9686 loops=1)
+   Recheck Cond: (created_at > (now() - '7 days'::interval))
+   Heap Blocks: exact=6417
+   ->  Bitmap Index Scan on idx_orders_created_at  (cost=0.00..187.59 rows=10022 width=0) (actual time=1.086..1.087 rows=9686 loops=1)
+         Index Cond: (created_at > (now() - '7 days'::interval))
+ Planning Time: 0.384 ms
+ Execution Time: 6.797 ms
+(7 rows)
+
+                                                             QUERY PLAN                                                              
+-------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on orders  (cost=27.43..3978.60 rows=1419 width=53) (actual time=0.418..1.319 rows=1477 loops=1)
+   Recheck Cond: (created_at > (now() - '1 day'::interval))
+   Heap Blocks: exact=1387
+   ->  Bitmap Index Scan on idx_orders_created_at  (cost=0.00..27.07 rows=1419 width=0) (actual time=0.227..0.227 rows=1477 loops=1)
+         Index Cond: (created_at > (now() - '1 day'::interval))
+ Planning Time: 0.128 ms
+ Execution Time: 1.410 ms
+(7 rows)
+
+                                                               QUERY PLAN                                                               
+----------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on orders  (cost=824.00..12416.78 rows=43816 width=53) (actual time=5.504..15.356 rows=41715 loops=1)
+   Recheck Cond: (created_at > (now() - '1 mon'::interval))
+   Heap Blocks: exact=10614
+   ->  Bitmap Index Scan on idx_orders_created_at  (cost=0.00..813.05 rows=43816 width=0) (actual time=4.111..4.112 rows=41715 loops=1)
+         Index Cond: (created_at > (now() - '1 mon'::interval))
+ Planning Time: 0.064 ms
+ Execution Time: 16.625 ms
+(7 rows)
+
+                                                   QUERY PLAN                                                    
+-----------------------------------------------------------------------------------------------------------------
+ Seq Scan on orders  (cost=0.00..28326.00 rows=499484 width=53) (actual time=0.006..137.277 rows=498973 loops=1)
+   Filter: (created_at > (now() - '1 year'::interval))
+   Rows Removed by Filter: 501027
+ Planning Time: 0.090 ms
+ Execution Time: 149.877 ms
+(5 rows)
+
+=== T10 bitmap amount ===
+CREATE INDEX
+ANALYZE
+                                                               QUERY PLAN                                                                
+-----------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on orders  (cost=4235.00..18050.14 rows=199276 width=53) (actual time=19.061..41.630 rows=200216 loops=1)
+   Recheck Cond: ((amount >= '1000'::numeric) AND (amount <= '3000'::numeric))
+   Heap Blocks: exact=10826
+   ->  Bitmap Index Scan on idx_orders_amount  (cost=0.00..4185.19 rows=199276 width=0) (actual time=17.695..17.696 rows=200216 loops=1)
+         Index Cond: ((amount >= '1000'::numeric) AND (amount <= '3000'::numeric))
+ Planning Time: 0.337 ms
+ Execution Time: 46.663 ms
+(7 rows)
+
+=== T11 multi ===
+NOTICE:  relation "idx_orders_user_status" already exists, skipping
+                                                               QUERY PLAN                                                                
+-----------------------------------------------------------------------------------------------------------------------------------------
+ Index Scan using idx_orders_user_status_created on orders  (cost=0.42..16.48 rows=3 width=53) (actual time=0.069..0.069 rows=0 loops=1)
+   Index Cond: ((user_id = 123) AND ((status)::text = 'PAID'::text))
+ Planning Time: 0.105 ms
+ Execution Time: 0.087 ms
+(4 rows)
+
+=== T12 composite ===
+CREATE INDEX
+ANALYZE
+                                                               QUERY PLAN                                                                
+-----------------------------------------------------------------------------------------------------------------------------------------
+ Index Scan using idx_orders_user_status_created on orders  (cost=0.42..16.48 rows=3 width=53) (actual time=0.013..0.014 rows=0 loops=1)
+   Index Cond: ((user_id = 123) AND ((status)::text = 'PAID'::text))
+ Planning Time: 0.319 ms
+ Execution Time: 0.028 ms
+(4 rows)
+
+=== T13 order ===
+NOTICE:  relation "idx_orders_user_created_at" already exists, skipping
+CREATE INDEX
+CREATE INDEX
+NOTICE:  relation "idx_orders_created_at_user" already exists, skipping
+ANALYZE
+                                                               QUERY PLAN                                                               
+----------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on orders  (cost=4.51..47.60 rows=11 width=53) (actual time=0.019..0.024 rows=4 loops=1)
+   Recheck Cond: (user_id = 123)
+   Heap Blocks: exact=4
+   ->  Bitmap Index Scan on idx_orders_user_status_created  (cost=0.00..4.51 rows=11 width=0) (actual time=0.014..0.014 rows=4 loops=1)
+         Index Cond: (user_id = 123)
+ Planning Time: 0.319 ms
+ Execution Time: 0.055 ms
+(7 rows)
+
+                                                               QUERY PLAN                                                                
+-----------------------------------------------------------------------------------------------------------------------------------------
+ Index Scan using idx_orders_user_created_at_desc on orders  (cost=0.43..8.45 rows=1 width=53) (actual time=0.058..0.059 rows=0 loops=1)
+   Index Cond: ((user_id = 123) AND (created_at > (now() - '30 days'::interval)))
+ Planning Time: 0.146 ms
+ Execution Time: 0.076 ms
+(4 rows)
+
+                                                               QUERY PLAN                                                               
+----------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on orders  (cost=769.78..12312.37 rows=40948 width=53) (actual time=5.347..15.605 rows=41704 loops=1)
+   Recheck Cond: (created_at > (now() - '30 days'::interval))
+   Heap Blocks: exact=10614
+   ->  Bitmap Index Scan on idx_orders_created_at  (cost=0.00..759.54 rows=40948 width=0) (actual time=3.824..3.824 rows=41704 loops=1)
+         Index Cond: (created_at > (now() - '30 days'::interval))
+ Planning Time: 0.059 ms
+ Execution Time: 16.949 ms
+(7 rows)
+
+=== T14 sort ===
+                                                                  QUERY PLAN                                                                  
+----------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=47.79..47.81 rows=11 width=53) (actual time=0.034..0.035 rows=4 loops=1)
+   Sort Key: created_at DESC
+   Sort Method: quicksort  Memory: 25kB
+   ->  Bitmap Heap Scan on orders  (cost=4.51..47.60 rows=11 width=53) (actual time=0.018..0.023 rows=4 loops=1)
+         Recheck Cond: (user_id = 123)
+         Heap Blocks: exact=4
+         ->  Bitmap Index Scan on idx_orders_user_status_created  (cost=0.00..4.51 rows=11 width=0) (actual time=0.015..0.015 rows=4 loops=1)
+               Index Cond: (user_id = 123)
+ Planning Time: 0.155 ms
+ Execution Time: 0.075 ms
+(10 rows)
+
+NOTICE:  relation "idx_orders_user_created_at_desc" already exists, skipping
+CREATE INDEX
+ANALYZE
+                                                                  QUERY PLAN                                                                  
+NOTICE:  relation "idx_orders_user_id_include" already exists, skipping
+----------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=47.79..47.81 rows=11 width=53) (actual time=0.036..0.037 rows=4 loops=1)
+   Sort Key: created_at DESC
+   Sort Method: quicksort  Memory: 25kB
+   ->  Bitmap Heap Scan on orders  (cost=4.51..47.60 rows=11 width=53) (actual time=0.020..0.026 rows=4 loops=1)
+         Recheck Cond: (user_id = 123)
+         Heap Blocks: exact=4
+         ->  Bitmap Index Scan on idx_orders_user_status_created  (cost=0.00..4.51 rows=11 width=0) (actual time=0.016..0.016 rows=4 loops=1)
+               Index Cond: (user_id = 123)
+ Planning Time: 0.308 ms
+ Execution Time: 0.075 ms
+(10 rows)
+
+=== T15 pagination ===
+                                                                     QUERY PLAN                                                                     
+----------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=47.79..47.81 rows=11 width=53) (actual time=0.031..0.032 rows=4 loops=1)
+   ->  Sort  (cost=47.79..47.81 rows=11 width=53) (actual time=0.030..0.031 rows=4 loops=1)
+         Sort Key: created_at DESC
+         Sort Method: quicksort  Memory: 25kB
+         ->  Bitmap Heap Scan on orders  (cost=4.51..47.60 rows=11 width=53) (actual time=0.017..0.023 rows=4 loops=1)
+               Recheck Cond: (user_id = 123)
+               Heap Blocks: exact=4
+               ->  Bitmap Index Scan on idx_orders_user_status_created  (cost=0.00..4.51 rows=11 width=0) (actual time=0.014..0.014 rows=4 loops=1)
+                     Index Cond: (user_id = 123)
+ Planning Time: 0.078 ms
+ Execution Time: 0.071 ms
+(11 rows)
+
+=== T16 index only ===
+                                                                QUERY PLAN                                                                
+------------------------------------------------------------------------------------------------------------------------------------------
+ Index Only Scan using idx_orders_user_id_include on orders  (cost=0.42..4.62 rows=11 width=16) (actual time=0.073..0.075 rows=4 loops=1)
+   Index Cond: (user_id = 123)
+   Heap Fetches: 0
+ Planning Time: 0.044 ms
+ Execution Time: 0.086 ms
+(5 rows)
+
+CREATE INDEX
+ANALYZE
+                                                                QUERY PLAN                                                                
+------------------------------------------------------------------------------------------------------------------------------------------
+ Index Only Scan using idx_orders_user_id_include on orders  (cost=0.42..4.62 rows=11 width=31) (actual time=0.015..0.017 rows=4 loops=1)
+   Index Cond: (user_id = 123)
+   Heap Fetches: 0
+ Planning Time: 0.244 ms
+ Execution Time: 0.032 ms
+(5 rows)
+
+=== T17 partial ===
+                                                                 QUERY PLAN                                                                  
+NOTICE:  relation "idx_orders_new" already exists, skipping
+---------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=47539.07..48161.32 rows=248900 width=53) (actual time=91.951..119.751 rows=249979 loops=1)
+   Sort Key: created_at
+   Sort Method: external merge  Disk: 16184kB
+   ->  Bitmap Heap Scan on orders  (cost=2785.40..16722.65 rows=248900 width=53) (actual time=5.657..32.653 rows=249979 loops=1)
+         Recheck Cond: ((status)::text = 'NEW'::text)
+         Heap Blocks: exact=10826
+         ->  Bitmap Index Scan on idx_orders_status  (cost=0.00..2723.18 rows=248900 width=0) (actual time=4.301..4.302 rows=249979 loops=1)
+               Index Cond: ((status)::text = 'NEW'::text)
+ Planning Time: 0.123 ms
+ Execution Time: 127.774 ms
+(10 rows)
+
+CREATE INDEX
+ANALYZE
+                                                                 QUERY PLAN                                                                  
+---------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=48262.84..48896.76 rows=253567 width=53) (actual time=92.578..122.672 rows=249979 loops=1)
+   Sort Key: created_at
+   Sort Method: external merge  Disk: 16184kB
+   ->  Bitmap Heap Scan on orders  (cost=2837.57..16833.16 rows=253567 width=53) (actual time=5.545..32.923 rows=249979 loops=1)
+         Recheck Cond: ((status)::text = 'NEW'::text)
+         Heap Blocks: exact=10826
+         ->  Bitmap Index Scan on idx_orders_status  (cost=0.00..2774.18 rows=253567 width=0) (actual time=4.196..4.196 rows=249979 loops=1)
+               Index Cond: ((status)::text = 'NEW'::text)
+ Planning Time: 0.290 ms
+ Execution Time: 131.277 ms
+(10 rows)
+
+=== T18 expression ===
+NOTICE:  table "demo_users" does not exist, skipping
+DROP TABLE
+CREATE TABLE
+INSERT 0 100000
+INSERT 0 1
+CREATE INDEX
+ANALYZE
+                                                 QUERY PLAN                                                 
+------------------------------------------------------------------------------------------------------------
+ Seq Scan on demo_users  (cost=0.00..2236.01 rows=500 width=29) (actual time=22.407..22.408 rows=1 loops=1)
+   Filter: (lower((email)::text) = 'test@example.com'::text)
+   Rows Removed by Filter: 100000
+ Planning Time: 0.158 ms
+ Execution Time: 22.440 ms
+(5 rows)
+
+CREATE INDEX
+ANALYZE
+                                                               QUERY PLAN                                                               
+----------------------------------------------------------------------------------------------------------------------------------------
+ Index Scan using idx_demo_users_lower_email on demo_users  (cost=0.42..8.44 rows=1 width=29) (actual time=0.030..0.031 rows=1 loops=1)
+   Index Cond: (lower((email)::text) = 'test@example.com'::text)
+ Planning Time: 0.166 ms
+ Execution Time: 0.046 ms
+(4 rows)
+
+=== T19 insert cost ===
+DROP TABLE
+CREATE TABLE
+Timing is on.
+INSERT 0 100000
+Time: 321.165 ms
+CREATE INDEX
+Time: 63.999 ms
+CREATE INDEX
+Time: 46.772 ms
+CREATE INDEX
+Time: 45.994 ms
+INSERT 0 100000
+Time: 665.826 ms
+Timing is off.
+=== T20 stats ===
+ schemaname |      relname       |          indexrelname           | idx_scan 
+------------+--------------------+---------------------------------+----------
+ lab1       | orders_insert_test | idx_ins_created                 |        0
+ lab1       | orders             | idx_orders_new                  |        0
+ lab1       | users              | users_pkey                      |        0
+ lab1       | users              | idx_users_email                 |        0
+ lab1       | demo_users         | demo_users_pkey                 |        0
+ lab1       | demo_users         | idx_demo_users_email            |        0
+ lab1       | orders_insert_test | orders_insert_test_pkey         |        0
+ lab1       | orders_insert_test | idx_ins_user                    |        0
+ lab1       | orders_insert_test | idx_ins_status                  |        0
+ lab1       | orders             | orders_pkey                     |        0
+ lab1       | orders             | idx_orders_amount               |        1
+ lab1       | demo_users         | idx_demo_users_lower_email      |        1
+ lab1       | users              | idx_users_lower_email           |        1
+ lab1       | orders             | idx_orders_user_status          |        1
+ lab1       | orders             | idx_orders_user_id              |        2
+ lab1       | orders             | idx_orders_created_at_user      |        3
+ lab1       | orders             | idx_orders_user_created_at      |        3
+ lab1       | orders             | idx_orders_user_id_include      |        3
+ lab1       | orders             | idx_orders_user_created_at_desc |        5
+ lab1       | orders             | idx_orders_user_status_created  |        9
+ lab1       | orders             | idx_orders_created_at           |       11
+ lab1       | orders             | idx_orders_status               |       18
+(22 rows)
+
+=== T21 final before ===
+                                                                  QUERY PLAN                                                                  
+----------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=0.43..8.45 rows=1 width=29) (actual time=0.013..0.013 rows=0 loops=1)
+   ->  Index Scan using idx_orders_user_status_created on orders  (cost=0.43..8.45 rows=1 width=29) (actual time=0.012..0.012 rows=0 loops=1)
+         Index Cond: ((user_id = 123) AND ((status)::text = 'PAID'::text) AND (created_at >= (now() - '30 days'::interval)))
+ Planning Time: 0.122 ms
+ Execution Time: 0.028 ms
+(5 rows)
+
+NOTICE:  relation "idx_orders_user_status_created" already exists, skipping
+CREATE INDEX
+ANALYZE
+=== T21 final after ===
+                                                                  QUERY PLAN                                                                  
+----------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=0.43..8.45 rows=1 width=29) (actual time=0.014..0.015 rows=0 loops=1)
+   ->  Index Scan using idx_orders_user_status_created on orders  (cost=0.43..8.45 rows=1 width=29) (actual time=0.014..0.014 rows=0 loops=1)
+         Index Cond: ((user_id = 123) AND ((status)::text = 'PAID'::text) AND (created_at >= (now() - '30 days'::interval)))
+ Planning Time: 0.300 ms
+ Execution Time: 0.031 ms
+(5 rows)
+

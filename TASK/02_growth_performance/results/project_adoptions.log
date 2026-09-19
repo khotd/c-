@@ -1,0 +1,67 @@
+=== PROJECT adoptions size ===
+ count  
+--------
+ 500001
+(1 row)
+
+ pg_size_pretty 
+----------------
+ 44 MB
+(1 row)
+
+ pg_size_pretty 
+----------------
+ 87 MB
+(1 row)
+
+=== Q1 ===
+                                                                 QUERY PLAN                                                                  
+---------------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on adoptions  (cost=5.20..366.65 rows=100 width=66) (actual time=0.076..1.286 rows=92 loops=1)
+   Recheck Cond: (user_id = 2)
+   Heap Blocks: exact=88
+   ->  Bitmap Index Scan on idx_adoptions_user_status_created  (cost=0.00..5.17 rows=100 width=0) (actual time=0.043..0.044 rows=92 loops=1)
+         Index Cond: (user_id = 2)
+ Planning Time: 0.283 ms
+ Execution Time: 1.365 ms
+(7 rows)
+
+=== Q2 range ===
+                                                          QUERY PLAN                                                          
+------------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..13539.21 rows=21697 width=66) (actual time=0.276..61.669 rows=20525 loops=1)
+   Workers Planned: 2
+   Workers Launched: 2
+   ->  Parallel Seq Scan on adoptions  (cost=0.00..10369.51 rows=9040 width=66) (actual time=0.047..54.512 rows=6842 loops=3)
+         Filter: ((created_at < now()) AND (created_at >= (now() - '30 days'::interval)))
+         Rows Removed by Filter: 159825
+ Planning Time: 0.164 ms
+ Execution Time: 62.568 ms
+(8 rows)
+
+=== Q3 sort limit ===
+                                                                       QUERY PLAN                                                                        
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=369.97..370.10 rows=50 width=66) (actual time=0.210..0.216 rows=50 loops=1)
+   ->  Sort  (cost=369.97..370.22 rows=100 width=66) (actual time=0.208..0.211 rows=50 loops=1)
+         Sort Key: created_at DESC
+         Sort Method: quicksort  Memory: 37kB
+         ->  Bitmap Heap Scan on adoptions  (cost=5.20..366.65 rows=100 width=66) (actual time=0.036..0.143 rows=92 loops=1)
+               Recheck Cond: (user_id = 2)
+               Heap Blocks: exact=88
+               ->  Bitmap Index Scan on idx_adoptions_user_status_created  (cost=0.00..5.17 rows=100 width=0) (actual time=0.022..0.022 rows=92 loops=1)
+                     Index Cond: (user_id = 2)
+ Planning Time: 0.358 ms
+ Execution Time: 0.295 ms
+(11 rows)
+
+=== indexes sizes adoptions ===
+           indexrelname            | pg_size_pretty 
+-----------------------------------+----------------
+ adoptions_pkey                    | 11 MB
+ idx_adoptions_animal_id           | 5440 kB
+ idx_adoptions_user_id             | 4496 kB
+ idx_adoptions_status              | 3200 kB
+ idx_adoptions_user_status_created | 19 MB
+(5 rows)
+

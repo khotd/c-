@@ -1,0 +1,50 @@
+=== 10k_NOINDEX SIZE ===
+ rows  
+-------
+ 10000
+(1 row)
+
+ table_size 
+------------
+ 672 kB
+(1 row)
+
+ total_size 
+------------
+ 944 kB
+(1 row)
+
+=== 10k_NOINDEX SELECT user_id ===
+                                            QUERY PLAN                                             
+---------------------------------------------------------------------------------------------------
+ Seq Scan on events  (cost=0.00..209.00 rows=1 width=36) (actual time=0.425..0.425 rows=0 loops=1)
+   Filter: (user_id = 123)
+   Rows Removed by Filter: 10000
+ Planning Time: 0.262 ms
+ Execution Time: 0.435 ms
+(5 rows)
+
+=== 10k_NOINDEX RANGE ===
+                                             QUERY PLAN                                              
+-----------------------------------------------------------------------------------------------------
+ Seq Scan on events  (cost=0.00..259.00 rows=26 width=36) (actual time=0.108..1.363 rows=27 loops=1)
+   Filter: (created_at >= (now() - '1 day'::interval))
+   Rows Removed by Filter: 9973
+ Planning Time: 0.171 ms
+ Execution Time: 1.373 ms
+(5 rows)
+
+=== 10k_NOINDEX ORDER LIMIT ===
+                                                  QUERY PLAN                                                   
+---------------------------------------------------------------------------------------------------------------
+ Limit  (cost=209.01..209.01 rows=1 width=36) (actual time=0.505..0.506 rows=0 loops=1)
+   ->  Sort  (cost=209.01..209.01 rows=1 width=36) (actual time=0.504..0.505 rows=0 loops=1)
+         Sort Key: created_at DESC
+         Sort Method: quicksort  Memory: 25kB
+         ->  Seq Scan on events  (cost=0.00..209.00 rows=1 width=36) (actual time=0.473..0.473 rows=0 loops=1)
+               Filter: (user_id = 123)
+               Rows Removed by Filter: 10000
+ Planning Time: 0.123 ms
+ Execution Time: 0.540 ms
+(9 rows)
+

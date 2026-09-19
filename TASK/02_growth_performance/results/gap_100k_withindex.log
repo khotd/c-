@@ -1,0 +1,62 @@
+=== 100k WITHINDEX ===
+            indexrelname            | pg_size_pretty 
+------------------------------------+----------------
+ events_100k_pkey                   | 2208 kB
+ events_100k_user_id_idx            | 1936 kB
+ events_100k_created_at_idx         | 2208 kB
+ events_100k_user_id_created_at_idx | 3104 kB
+(4 rows)
+
+=== SELECT ===
+                                                           QUERY PLAN                                                           
+--------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on events_100k  (cost=4.31..12.04 rows=2 width=36) (actual time=0.075..0.075 rows=0 loops=1)
+   Recheck Cond: (user_id = 123)
+   ->  Bitmap Index Scan on events_100k_user_id_idx  (cost=0.00..4.31 rows=2 width=0) (actual time=0.070..0.071 rows=0 loops=1)
+         Index Cond: (user_id = 123)
+ Planning Time: 0.730 ms
+ Execution Time: 0.151 ms
+(6 rows)
+
+=== RANGE ===
+                                                              QUERY PLAN                                                               
+---------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on events_100k  (cost=6.71..621.08 rows=311 width=36) (actual time=0.186..1.321 rows=288 loops=1)
+   Recheck Cond: (created_at >= (now() - '1 day'::interval))
+   Heap Blocks: exact=247
+   ->  Bitmap Index Scan on events_100k_created_at_idx  (cost=0.00..6.63 rows=311 width=0) (actual time=0.145..0.146 rows=288 loops=1)
+         Index Cond: (created_at >= (now() - '1 day'::interval))
+ Planning Time: 0.394 ms
+ Execution Time: 1.407 ms
+(7 rows)
+
+=== ORDER ===
+                                                                 QUERY PLAN                                                                 
+--------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=12.05..12.05 rows=2 width=36) (actual time=0.058..0.059 rows=0 loops=1)
+   ->  Sort  (cost=12.05..12.05 rows=2 width=36) (actual time=0.056..0.057 rows=0 loops=1)
+         Sort Key: created_at DESC
+         Sort Method: quicksort  Memory: 25kB
+         ->  Bitmap Heap Scan on events_100k  (cost=4.31..12.04 rows=2 width=36) (actual time=0.009..0.009 rows=0 loops=1)
+               Recheck Cond: (user_id = 123)
+               ->  Bitmap Index Scan on events_100k_user_id_idx  (cost=0.00..4.31 rows=2 width=0) (actual time=0.007..0.008 rows=0 loops=1)
+                     Index Cond: (user_id = 123)
+ Planning Time: 0.350 ms
+ Execution Time: 0.118 ms
+(10 rows)
+
+=== AGG ===
+                                                                   QUERY PLAN                                                                    
+-------------------------------------------------------------------------------------------------------------------------------------------------
+ HashAggregate  (cost=1186.48..1186.52 rows=4 width=15) (actual time=8.253..8.256 rows=4 loops=1)
+   Group Key: event_type
+   Batches: 1  Memory Usage: 24kB
+   ->  Bitmap Heap Scan on events_100k  (cost=161.93..1144.14 rows=8469 width=7) (actual time=1.312..5.750 rows=8361 loops=1)
+         Recheck Cond: (created_at >= (now() - '30 days'::interval))
+         Heap Blocks: exact=834
+         ->  Bitmap Index Scan on events_100k_created_at_idx  (cost=0.00..159.81 rows=8469 width=0) (actual time=1.172..1.173 rows=8361 loops=1)
+               Index Cond: (created_at >= (now() - '30 days'::interval))
+ Planning Time: 0.869 ms
+ Execution Time: 8.541 ms
+(10 rows)
+

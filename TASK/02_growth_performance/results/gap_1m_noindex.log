@@ -1,0 +1,61 @@
+=== 1m NOINDEX SIZE ===
+  count  
+---------
+ 1000000
+(1 row)
+
+ pg_size_pretty 
+----------------
+ 65 MB
+(1 row)
+
+ pg_size_pretty 
+----------------
+ 87 MB
+(1 row)
+
+=== SELECT ===
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..14543.43 rows=11 width=36) (actual time=0.979..31.398 rows=13 loops=1)
+   Workers Planned: 2
+   Workers Launched: 2
+   ->  Parallel Seq Scan on events_1m  (cost=0.00..13542.33 rows=5 width=36) (actual time=2.050..23.243 rows=4 loops=3)
+         Filter: (user_id = 123)
+         Rows Removed by Filter: 333329
+ Planning Time: 0.159 ms
+ Execution Time: 31.420 ms
+(8 rows)
+
+=== RANGE ===
+                                                          QUERY PLAN                                                          
+------------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..16890.77 rows=2651 width=36) (actual time=0.538..116.209 rows=2778 loops=1)
+   Workers Planned: 2
+   Workers Launched: 2
+   ->  Parallel Seq Scan on events_1m  (cost=0.00..15625.67 rows=1105 width=36) (actual time=0.093..106.082 rows=926 loops=3)
+         Filter: (created_at >= (now() - '1 day'::interval))
+         Rows Removed by Filter: 332407
+ Planning Time: 0.122 ms
+ Execution Time: 116.511 ms
+(8 rows)
+
+=== ORDER ===
+                                                             QUERY PLAN                                                             
+------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=14542.42..14543.58 rows=10 width=36) (actual time=49.069..52.649 rows=13 loops=1)
+   ->  Gather Merge  (cost=14542.42..14543.58 rows=10 width=36) (actual time=49.067..52.643 rows=13 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         ->  Sort  (cost=13542.39..13542.40 rows=5 width=36) (actual time=41.186..41.189 rows=4 loops=3)
+               Sort Key: created_at DESC
+               Sort Method: quicksort  Memory: 25kB
+               Worker 0:  Sort Method: quicksort  Memory: 25kB
+               Worker 1:  Sort Method: quicksort  Memory: 25kB
+               ->  Parallel Seq Scan on events_1m  (cost=0.00..13542.33 rows=5 width=36) (actual time=3.382..40.846 rows=4 loops=3)
+                     Filter: (user_id = 123)
+                     Rows Removed by Filter: 333329
+ Planning Time: 0.279 ms
+ Execution Time: 52.768 ms
+(14 rows)
+

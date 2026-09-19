@@ -1,0 +1,8 @@
+      indexrelname       | index_size 
+-------------------------+------------
+ events_pkey             | 109 MB
+ idx_events_user_id      | 34 MB
+ idx_events_created_at   | 108 MB
+ idx_events_user_created | 151 MB
+(4 rows)
+

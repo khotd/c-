@@ -1,0 +1,331 @@
+=== LIVE adoptions now ===
+ count  
+--------
+ 500001
+(1 row)
+
+                                                                          QUERY PLAN                                                                          
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Append  (cost=0.00..475.53 rows=110 width=78) (actual time=0.074..2.831 rows=92 loops=1)
+   ->  Seq Scan on adoptions_2024_03 adoptions_1  (cost=0.00..0.00 rows=1 width=182) (actual time=0.008..0.008 rows=0 loops=1)
+         Filter: (user_id = 2)
+   ->  Seq Scan on adoptions_2024_04 adoptions_2  (cost=0.00..0.00 rows=1 width=182) (actual time=0.001..0.002 rows=0 loops=1)
+         Filter: (user_id = 2)
+   ->  Seq Scan on adoptions_2024_05 adoptions_3  (cost=0.00..0.00 rows=1 width=182) (actual time=0.001..0.002 rows=0 loops=1)
+         Filter: (user_id = 2)
+   ->  Seq Scan on adoptions_2024_06 adoptions_4  (cost=0.00..0.00 rows=1 width=182) (actual time=0.002..0.002 rows=0 loops=1)
+         Filter: (user_id = 2)
+   ->  Seq Scan on adoptions_2024_07 adoptions_5  (cost=0.00..0.00 rows=1 width=182) (actual time=0.003..0.003 rows=0 loops=1)
+         Filter: (user_id = 2)
+   ->  Seq Scan on adoptions_2024_08 adoptions_6  (cost=0.00..0.00 rows=1 width=182) (actual time=0.001..0.001 rows=0 loops=1)
+         Filter: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2024_09 adoptions_7  (cost=4.31..15.10 rows=3 width=67) (actual time=0.054..0.065 rows=2 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=2
+         ->  Bitmap Index Scan on adoptions_2024_09_user_id_status_created_at_idx  (cost=0.00..4.31 rows=3 width=0) (actual time=0.043..0.043 rows=2 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2024_10 adoptions_8  (cost=4.32..18.82 rows=4 width=67) (actual time=0.091..0.118 rows=4 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=4
+         ->  Bitmap Index Scan on adoptions_2024_10_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.026..0.027 rows=4 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2024_11 adoptions_9  (cost=4.32..18.79 rows=4 width=67) (actual time=0.064..0.127 rows=6 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=6
+         ->  Bitmap Index Scan on adoptions_2024_11_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.055..0.055 rows=6 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2024_12 adoptions_10  (cost=4.32..18.84 rows=4 width=66) (actual time=0.039..0.040 rows=1 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=1
+         ->  Bitmap Index Scan on adoptions_2024_12_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.016..0.016 rows=1 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2025_01 adoptions_11  (cost=4.32..18.82 rows=4 width=67) (actual time=0.055..0.083 rows=3 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=3
+         ->  Bitmap Index Scan on adoptions_2025_01_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.044..0.044 rows=3 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2025_02 adoptions_12  (cost=4.32..18.74 rows=4 width=66) (actual time=0.022..0.023 rows=1 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=1
+         ->  Bitmap Index Scan on adoptions_2025_02_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.015..0.015 rows=1 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2025_03 adoptions_13  (cost=4.32..18.82 rows=4 width=66) (actual time=0.026..0.027 rows=1 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=1
+         ->  Bitmap Index Scan on adoptions_2025_03_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.018..0.019 rows=1 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2025_04 adoptions_14  (cost=4.32..18.79 rows=4 width=67) (actual time=0.059..0.060 rows=1 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=1
+         ->  Bitmap Index Scan on adoptions_2025_04_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.029..0.029 rows=1 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2025_05 adoptions_15  (cost=4.32..18.82 rows=4 width=67) (actual time=0.074..0.082 rows=2 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=2
+         ->  Bitmap Index Scan on adoptions_2025_05_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.061..0.061 rows=2 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2025_06 adoptions_16  (cost=4.32..18.80 rows=4 width=66) (actual time=0.031..0.078 rows=5 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=5
+         ->  Bitmap Index Scan on adoptions_2025_06_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.023..0.023 rows=5 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2025_07 adoptions_17  (cost=4.32..18.82 rows=4 width=66) (actual time=0.034..0.069 rows=6 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=6
+         ->  Bitmap Index Scan on adoptions_2025_07_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.026..0.026 rows=6 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2025_08 adoptions_18  (cost=4.32..18.82 rows=4 width=67) (actual time=0.049..0.157 rows=3 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=3
+         ->  Bitmap Index Scan on adoptions_2025_08_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.038..0.038 rows=3 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2025_09 adoptions_19  (cost=4.32..18.79 rows=4 width=66) (actual time=0.057..0.067 rows=2 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=2
+         ->  Bitmap Index Scan on adoptions_2025_09_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.046..0.046 rows=2 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2025_10 adoptions_20  (cost=4.32..18.83 rows=4 width=67) (actual time=0.083..0.167 rows=5 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=5
+         ->  Bitmap Index Scan on adoptions_2025_10_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.036..0.037 rows=5 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2025_11 adoptions_21  (cost=4.32..18.80 rows=4 width=67) (actual time=0.030..0.048 rows=3 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=3
+         ->  Bitmap Index Scan on adoptions_2025_11_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.021..0.021 rows=3 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2025_12 adoptions_22  (cost=4.32..18.83 rows=4 width=66) (actual time=0.033..0.099 rows=6 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=6
+         ->  Bitmap Index Scan on adoptions_2025_12_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.024..0.024 rows=6 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2026_01 adoptions_23  (cost=4.32..18.83 rows=4 width=67) (actual time=0.038..0.150 rows=6 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=6
+         ->  Bitmap Index Scan on adoptions_2026_01_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.029..0.030 rows=6 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2026_02 adoptions_24  (cost=4.32..18.74 rows=4 width=66) (actual time=0.030..0.084 rows=3 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=3
+         ->  Bitmap Index Scan on adoptions_2026_02_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.022..0.022 rows=3 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2026_03 adoptions_25  (cost=4.32..18.83 rows=4 width=66) (actual time=0.040..0.059 rows=4 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=4
+         ->  Bitmap Index Scan on adoptions_2026_03_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.028..0.028 rows=4 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2026_04 adoptions_26  (cost=4.32..18.80 rows=4 width=66) (actual time=0.047..0.060 rows=4 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=3
+         ->  Bitmap Index Scan on adoptions_2026_04_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.038..0.038 rows=4 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2026_05 adoptions_27  (cost=4.32..18.82 rows=4 width=66) (actual time=0.059..0.143 rows=6 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=6
+         ->  Bitmap Index Scan on adoptions_2026_05_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.025..0.025 rows=6 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2026_06 adoptions_28  (cost=4.32..18.81 rows=4 width=66) (actual time=0.040..0.655 rows=4 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=4
+         ->  Bitmap Index Scan on adoptions_2026_06_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.032..0.032 rows=4 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2026_07 adoptions_29  (cost=4.32..18.82 rows=4 width=67) (actual time=0.076..0.111 rows=6 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=6
+         ->  Bitmap Index Scan on adoptions_2026_07_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.046..0.046 rows=6 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2026_08 adoptions_30  (cost=4.32..18.82 rows=4 width=66) (actual time=0.066..0.088 rows=4 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=4
+         ->  Bitmap Index Scan on adoptions_2026_08_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.022..0.022 rows=4 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2026_09 adoptions_31  (cost=4.31..17.78 rows=4 width=67) (actual time=0.047..0.096 rows=4 loops=1)
+         Recheck Cond: (user_id = 2)
+         Heap Blocks: exact=4
+         ->  Bitmap Index Scan on adoptions_2026_09_user_id_status_created_at_idx  (cost=0.00..4.31 rows=4 width=0) (actual time=0.039..0.039 rows=4 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Seq Scan on adoptions_2026_10 adoptions_32  (cost=0.00..0.00 rows=1 width=182) (actual time=0.007..0.008 rows=0 loops=1)
+         Filter: (user_id = 2)
+   ->  Seq Scan on adoptions_2026_11 adoptions_33  (cost=0.00..0.00 rows=1 width=182) (actual time=0.002..0.002 rows=0 loops=1)
+         Filter: (user_id = 2)
+   ->  Bitmap Heap Scan on adoptions_2026_12 adoptions_34  (cost=4.16..9.50 rows=2 width=182) (actual time=0.006..0.006 rows=0 loops=1)
+         Recheck Cond: (user_id = 2)
+         ->  Bitmap Index Scan on adoptions_2026_12_user_id_status_created_at_idx  (cost=0.00..4.16 rows=2 width=0) (actual time=0.005..0.005 rows=0 loops=1)
+               Index Cond: (user_id = 2)
+   ->  Seq Scan on adoptions_default adoptions_35  (cost=0.00..0.00 rows=1 width=182) (actual time=0.005..0.005 rows=0 loops=1)
+         Filter: (user_id = 2)
+ Planning Time: 6.047 ms
+ Execution Time: 3.762 ms
+(150 rows)
+
+                                                               QUERY PLAN                                                                
+-----------------------------------------------------------------------------------------------------------------------------------------
+ Append  (cost=0.00..13339.14 rows=20558 width=66) (actual time=0.085..28.014 rows=20525 loops=1)
+   Subplans Removed: 33
+   ->  Seq Scan on adoptions_2026_08 adoptions_1  (cost=0.00..714.68 rows=12981 width=66) (actual time=0.084..20.252 rows=12981 loops=1)
+         Filter: ((created_at < now()) AND (created_at >= (now() - '30 days'::interval)))
+         Rows Removed by Filter: 8116
+   ->  Seq Scan on adoptions_2026_09 adoptions_2  (cost=0.00..255.74 rows=7543 width=67) (actual time=0.025..6.333 rows=7544 loops=1)
+         Filter: ((created_at < now()) AND (created_at >= (now() - '30 days'::interval)))
+ Planning Time: 1.475 ms
+ Execution Time: 28.885 ms
+(9 rows)
+
+                                                                                QUERY PLAN                                                                                
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=479.19..479.31 rows=50 width=78) (actual time=0.852..0.879 rows=50 loops=1)
+   ->  Sort  (cost=479.19..479.46 rows=110 width=78) (actual time=0.848..0.871 rows=50 loops=1)
+         Sort Key: adoptions.created_at DESC
+         Sort Method: quicksort  Memory: 37kB
+         ->  Append  (cost=0.00..475.53 rows=110 width=78) (actual time=0.047..0.742 rows=92 loops=1)
+               ->  Seq Scan on adoptions_2024_03 adoptions_1  (cost=0.00..0.00 rows=1 width=182) (actual time=0.005..0.007 rows=0 loops=1)
+                     Filter: (user_id = 2)
+               ->  Seq Scan on adoptions_2024_04 adoptions_2  (cost=0.00..0.00 rows=1 width=182) (actual time=0.002..0.002 rows=0 loops=1)
+                     Filter: (user_id = 2)
+               ->  Seq Scan on adoptions_2024_05 adoptions_3  (cost=0.00..0.00 rows=1 width=182) (actual time=0.002..0.002 rows=0 loops=1)
+                     Filter: (user_id = 2)
+               ->  Seq Scan on adoptions_2024_06 adoptions_4  (cost=0.00..0.00 rows=1 width=182) (actual time=0.002..0.003 rows=0 loops=1)
+                     Filter: (user_id = 2)
+               ->  Seq Scan on adoptions_2024_07 adoptions_5  (cost=0.00..0.00 rows=1 width=182) (actual time=0.005..0.006 rows=0 loops=1)
+                     Filter: (user_id = 2)
+               ->  Seq Scan on adoptions_2024_08 adoptions_6  (cost=0.00..0.00 rows=1 width=182) (actual time=0.002..0.002 rows=0 loops=1)
+                     Filter: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2024_09 adoptions_7  (cost=4.31..15.10 rows=3 width=67) (actual time=0.026..0.029 rows=2 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=2
+                     ->  Bitmap Index Scan on adoptions_2024_09_user_id_status_created_at_idx  (cost=0.00..4.31 rows=3 width=0) (actual time=0.020..0.020 rows=2 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2024_10 adoptions_8  (cost=4.32..18.82 rows=4 width=67) (actual time=0.021..0.028 rows=4 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=4
+                     ->  Bitmap Index Scan on adoptions_2024_10_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.016..0.016 rows=4 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2024_11 adoptions_9  (cost=4.32..18.79 rows=4 width=67) (actual time=0.020..0.029 rows=6 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=6
+                     ->  Bitmap Index Scan on adoptions_2024_11_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.017..0.017 rows=6 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2024_12 adoptions_10  (cost=4.32..18.84 rows=4 width=66) (actual time=0.009..0.010 rows=1 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=1
+                     ->  Bitmap Index Scan on adoptions_2024_12_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.007..0.007 rows=1 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2025_01 adoptions_11  (cost=4.32..18.82 rows=4 width=67) (actual time=0.043..0.048 rows=3 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=3
+                     ->  Bitmap Index Scan on adoptions_2025_01_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.041..0.041 rows=3 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2025_02 adoptions_12  (cost=4.32..18.74 rows=4 width=66) (actual time=0.008..0.008 rows=1 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=1
+                     ->  Bitmap Index Scan on adoptions_2025_02_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.006..0.007 rows=1 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2025_03 adoptions_13  (cost=4.32..18.82 rows=4 width=66) (actual time=0.008..0.009 rows=1 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=1
+                     ->  Bitmap Index Scan on adoptions_2025_03_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.006..0.006 rows=1 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2025_04 adoptions_14  (cost=4.32..18.79 rows=4 width=67) (actual time=0.010..0.010 rows=1 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=1
+                     ->  Bitmap Index Scan on adoptions_2025_04_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.008..0.008 rows=1 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2025_05 adoptions_15  (cost=4.32..18.82 rows=4 width=67) (actual time=0.021..0.024 rows=2 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=2
+                     ->  Bitmap Index Scan on adoptions_2025_05_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.018..0.018 rows=2 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2025_06 adoptions_16  (cost=4.32..18.80 rows=4 width=66) (actual time=0.017..0.026 rows=5 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=5
+                     ->  Bitmap Index Scan on adoptions_2025_06_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.014..0.014 rows=5 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2025_07 adoptions_17  (cost=4.32..18.82 rows=4 width=66) (actual time=0.023..0.032 rows=6 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=6
+                     ->  Bitmap Index Scan on adoptions_2025_07_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.020..0.020 rows=6 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2025_08 adoptions_18  (cost=4.32..18.82 rows=4 width=67) (actual time=0.015..0.020 rows=3 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=3
+                     ->  Bitmap Index Scan on adoptions_2025_08_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.012..0.012 rows=3 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2025_09 adoptions_19  (cost=4.32..18.79 rows=4 width=66) (actual time=0.015..0.018 rows=2 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=2
+                     ->  Bitmap Index Scan on adoptions_2025_09_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.012..0.012 rows=2 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2025_10 adoptions_20  (cost=4.32..18.83 rows=4 width=67) (actual time=0.024..0.094 rows=5 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=5
+                     ->  Bitmap Index Scan on adoptions_2025_10_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.020..0.020 rows=5 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2025_11 adoptions_21  (cost=4.32..18.80 rows=4 width=67) (actual time=0.020..0.024 rows=3 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=3
+                     ->  Bitmap Index Scan on adoptions_2025_11_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.016..0.016 rows=3 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2025_12 adoptions_22  (cost=4.32..18.83 rows=4 width=66) (actual time=0.020..0.028 rows=6 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=6
+                     ->  Bitmap Index Scan on adoptions_2025_12_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.016..0.016 rows=6 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2026_01 adoptions_23  (cost=4.32..18.83 rows=4 width=67) (actual time=0.028..0.038 rows=6 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=6
+                     ->  Bitmap Index Scan on adoptions_2026_01_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.024..0.024 rows=6 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2026_02 adoptions_24  (cost=4.32..18.74 rows=4 width=66) (actual time=0.017..0.022 rows=3 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=3
+                     ->  Bitmap Index Scan on adoptions_2026_02_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.014..0.014 rows=3 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2026_03 adoptions_25  (cost=4.32..18.83 rows=4 width=66) (actual time=0.014..0.017 rows=4 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=4
+                     ->  Bitmap Index Scan on adoptions_2026_03_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.011..0.011 rows=4 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2026_04 adoptions_26  (cost=4.32..18.80 rows=4 width=66) (actual time=0.013..0.016 rows=4 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=3
+                     ->  Bitmap Index Scan on adoptions_2026_04_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.011..0.012 rows=4 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2026_05 adoptions_27  (cost=4.32..18.82 rows=4 width=66) (actual time=0.012..0.017 rows=6 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=6
+                     ->  Bitmap Index Scan on adoptions_2026_05_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.010..0.010 rows=6 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2026_06 adoptions_28  (cost=4.32..18.81 rows=4 width=66) (actual time=0.015..0.019 rows=4 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=4
+                     ->  Bitmap Index Scan on adoptions_2026_06_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.013..0.013 rows=4 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2026_07 adoptions_29  (cost=4.32..18.82 rows=4 width=67) (actual time=0.045..0.056 rows=6 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=6
+                     ->  Bitmap Index Scan on adoptions_2026_07_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.040..0.040 rows=6 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2026_08 adoptions_30  (cost=4.32..18.82 rows=4 width=66) (actual time=0.016..0.019 rows=4 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=4
+                     ->  Bitmap Index Scan on adoptions_2026_08_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.013..0.014 rows=4 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2026_09 adoptions_31  (cost=4.31..17.78 rows=4 width=67) (actual time=0.018..0.023 rows=4 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     Heap Blocks: exact=4
+                     ->  Bitmap Index Scan on adoptions_2026_09_user_id_status_created_at_idx  (cost=0.00..4.31 rows=4 width=0) (actual time=0.014..0.014 rows=4 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Seq Scan on adoptions_2026_10 adoptions_32  (cost=0.00..0.00 rows=1 width=182) (actual time=0.007..0.007 rows=0 loops=1)
+                     Filter: (user_id = 2)
+               ->  Seq Scan on adoptions_2026_11 adoptions_33  (cost=0.00..0.00 rows=1 width=182) (actual time=0.003..0.004 rows=0 loops=1)
+                     Filter: (user_id = 2)
+               ->  Bitmap Heap Scan on adoptions_2026_12 adoptions_34  (cost=4.16..9.50 rows=2 width=182) (actual time=0.008..0.009 rows=0 loops=1)
+                     Recheck Cond: (user_id = 2)
+                     ->  Bitmap Index Scan on adoptions_2026_12_user_id_status_created_at_idx  (cost=0.00..4.16 rows=2 width=0) (actual time=0.007..0.007 rows=0 loops=1)
+                           Index Cond: (user_id = 2)
+               ->  Seq Scan on adoptions_default adoptions_35  (cost=0.00..0.00 rows=1 width=182) (actual time=0.011..0.011 rows=0 loops=1)
+                     Filter: (user_id = 2)
+ Planning Time: 1.306 ms
+ Execution Time: 1.820 ms
+(154 rows)
+

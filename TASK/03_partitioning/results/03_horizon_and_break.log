@@ -1,0 +1,26 @@
+﻿CREATE TABLE
+CREATE TABLE
+docker : NOTICE:  relation "adoptions_2026_10" already exists, skipping
+C:\Users\User\AppData\Local\Temp\ps-script-2525e470-cb69-43b2-8f73-306153a18e73.ps1:96 знак:6
++ "@ | docker exec -i animal-shelter-db psql -U project -d projectDB -v ...
++      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (NOTICE:  relati...xists, skipping:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+NOTICE:  relation "adoptions_2026_11" already exists, skipping
+CREATE TABLE
+NOTICE:  relation "adoptions_2026_12" already exists, skipping
+                                                                         QUERY PLAN                                                                         
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=614.54..614.55 rows=1 width=8) (actual time=6.881..6.883 rows=1 loops=1)
+   Buffers: shared hit=242
+   ->  Seq Scan on adoptions_2026_03 adoptions  (cost=0.00..561.32 rows=21288 width=0) (actual time=0.010..5.545 rows=21288 loops=1)
+         Filter: ((created_at >= '2026-03-01 00:00:00'::timestamp without time zone) AND (created_at < '2026-04-01 00:00:00'::timestamp without time zone))
+         Buffers: shared hit=242
+ Planning:
+   Buffers: shared hit=387
+ Planning Time: 3.086 ms
+ Execution Time: 6.926 ms
+(9 rows)
+
+DROP TABLE

@@ -1,0 +1,50 @@
+=== 100k NOINDEX SIZE ===
+ count  
+--------
+ 100000
+(1 row)
+
+ pg_size_pretty 
+----------------
+ 6672 kB
+(1 row)
+
+ pg_size_pretty 
+----------------
+ 8912 kB
+(1 row)
+
+=== SELECT ===
+                                               QUERY PLAN                                                
+---------------------------------------------------------------------------------------------------------
+ Seq Scan on events_100k  (cost=0.00..2084.00 rows=2 width=36) (actual time=6.258..6.259 rows=0 loops=1)
+   Filter: (user_id = 123)
+   Rows Removed by Filter: 100000
+ Planning Time: 0.194 ms
+ Execution Time: 6.273 ms
+(5 rows)
+
+=== RANGE ===
+                                                  QUERY PLAN                                                  
+--------------------------------------------------------------------------------------------------------------
+ Seq Scan on events_100k  (cost=0.00..2584.00 rows=262 width=36) (actual time=0.040..18.587 rows=288 loops=1)
+   Filter: (created_at >= (now() - '1 day'::interval))
+   Rows Removed by Filter: 99712
+ Planning Time: 0.122 ms
+ Execution Time: 18.618 ms
+(5 rows)
+
+=== ORDER ===
+                                                     QUERY PLAN                                                      
+---------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=2084.01..2084.02 rows=2 width=36) (actual time=6.701..6.702 rows=0 loops=1)
+   ->  Sort  (cost=2084.01..2084.02 rows=2 width=36) (actual time=6.699..6.700 rows=0 loops=1)
+         Sort Key: created_at DESC
+         Sort Method: quicksort  Memory: 25kB
+         ->  Seq Scan on events_100k  (cost=0.00..2084.00 rows=2 width=36) (actual time=6.656..6.657 rows=0 loops=1)
+               Filter: (user_id = 123)
+               Rows Removed by Filter: 100000
+ Planning Time: 0.223 ms
+ Execution Time: 6.737 ms
+(9 rows)
+

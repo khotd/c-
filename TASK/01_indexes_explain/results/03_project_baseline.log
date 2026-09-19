@@ -1,0 +1,105 @@
+﻿=== indexes on adoptions ===
+        indexname        |                                     indexdef                                     
+-------------------------+----------------------------------------------------------------------------------
+ adoptions_pkey          | CREATE UNIQUE INDEX adoptions_pkey ON public.adoptions USING btree (id)
+ idx_adoptions_animal_id | CREATE INDEX idx_adoptions_animal_id ON public.adoptions USING btree (animal_id)
+ idx_adoptions_user_id   | CREATE INDEX idx_adoptions_user_id ON public.adoptions USING btree (user_id)
+ idx_adoptions_status    | CREATE INDEX idx_adoptions_status ON public.adoptions USING btree (status)
+(4 rows)
+
+=== Q1 by user_id ===
+                                                           QUERY PLAN                                                           
+--------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on adoptions  (cost=5.19..363.22 rows=99 width=66) (actual time=0.050..0.479 rows=92 loops=1)
+   Recheck Cond: (user_id = 2)
+   Heap Blocks: exact=88
+   ->  Bitmap Index Scan on idx_adoptions_user_id  (cost=0.00..5.17 rows=99 width=0) (actual time=0.030..0.030 rows=92 loops=1)
+         Index Cond: (user_id = 2)
+ Planning Time: 0.487 ms
+ Execution Time: 0.555 ms
+(7 rows)
+
+=== Q2 multi conditions ===
+                                                           QUERY PLAN                                                           
+--------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on adoptions  (cost=5.17..364.19 rows=13 width=66) (actual time=0.034..0.128 rows=13 loops=1)
+   Recheck Cond: (user_id = 2)
+   Filter: (((status)::text = 'Pending'::text) AND (created_at >= (now() - '365 days'::interval)))
+   Rows Removed by Filter: 79
+   Heap Blocks: exact=88
+   ->  Bitmap Index Scan on idx_adoptions_user_id  (cost=0.00..5.17 rows=99 width=0) (actual time=0.019..0.019 rows=92 loops=1)
+         Index Cond: (user_id = 2)
+ Planning Time: 0.204 ms
+ Execution Time: 0.168 ms
+(9 rows)
+
+=== Q3 filter+sort+limit ===
+                                                                 QUERY PLAN                                                                 
+--------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=366.51..366.63 rows=50 width=66) (actual time=0.161..0.166 rows=50 loops=1)
+   ->  Sort  (cost=366.51..366.75 rows=99 width=66) (actual time=0.160..0.162 rows=50 loops=1)
+         Sort Key: created_at DESC
+         Sort Method: quicksort  Memory: 37kB
+         ->  Bitmap Heap Scan on adoptions  (cost=5.19..363.22 rows=99 width=66) (actual time=0.025..0.116 rows=92 loops=1)
+               Recheck Cond: (user_id = 2)
+               Heap Blocks: exact=88
+               ->  Bitmap Index Scan on idx_adoptions_user_id  (cost=0.00..5.17 rows=99 width=0) (actual time=0.015..0.015 rows=92 loops=1)
+                     Index Cond: (user_id = 2)
+ Planning Time: 0.197 ms
+ Execution Time: 0.209 ms
+(11 rows)
+
+=== Q JOIN detailed ===
+                                                                          QUERY PLAN                                                                          
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=1081.15..1081.28 rows=50 width=455) (actual time=2.018..2.026 rows=50 loops=1)
+   ->  Sort  (cost=1081.15..1081.40 rows=99 width=455) (actual time=2.017..2.021 rows=50 loops=1)
+         Sort Key: ad.created_at DESC
+         Sort Method: quicksort  Memory: 37kB
+         ->  Nested Loop  (cost=5.91..1077.87 rows=99 width=455) (actual time=0.170..1.943 rows=92 loops=1)
+               ->  Nested Loop  (cost=5.76..1074.96 rows=99 width=41) (actual time=0.106..1.821 rows=92 loops=1)
+                     ->  Index Scan using users_pkey on users u  (cost=0.28..8.30 rows=1 width=12) (actual time=0.051..0.053 rows=1 loops=1)
+                           Index Cond: (id = 2)
+                     ->  Nested Loop  (cost=5.48..1065.67 rows=99 width=37) (actual time=0.050..1.751 rows=92 loops=1)
+                           ->  Bitmap Heap Scan on adoptions ad  (cost=5.19..363.22 rows=99 width=20) (actual time=0.028..0.134 rows=92 loops=1)
+                                 Recheck Cond: (user_id = 2)
+                                 Heap Blocks: exact=88
+                                 ->  Bitmap Index Scan on idx_adoptions_user_id  (cost=0.00..5.17 rows=99 width=0) (actual time=0.017..0.017 rows=92 loops=1)
+                                       Index Cond: (user_id = 2)
+                           ->  Index Scan using animals_pkey on animals a  (cost=0.29..7.10 rows=1 width=25) (actual time=0.017..0.017 rows=1 loops=92)
+                                 Index Cond: (id = ad.animal_id)
+               ->  Memoize  (cost=0.15..0.17 rows=1 width=422) (actual time=0.001..0.001 rows=1 loops=92)
+                     Cache Key: a.shelter_id
+                     Cache Mode: logical
+                     Hits: 90  Misses: 2  Evictions: 0  Overflows: 0  Memory Usage: 1kB
+                     ->  Index Scan using shelters_pkey on shelters s  (cost=0.14..0.16 rows=1 width=422) (actual time=0.029..0.029 rows=1 loops=2)
+                           Index Cond: (id = a.shelter_id)
+ Planning Time: 2.875 ms
+ Execution Time: 2.204 ms
+(24 rows)
+
+=== index usage ===
+ schemaname |  relname  |      indexrelname       | idx_scan 
+------------+-----------+-------------------------+----------
+ public     | users     | users_pkey              |   500003
+ public     | animals   | animals_pkey            |   500002
+ public     | shelters  | shelters_pkey           |    50004
+ public     | animals   | idx_animals_name        |        6
+ public     | shelters  | idx_shelters_name       |        6
+ public     | users     | idx_users_username      |        5
+ public     | adoptions | idx_adoptions_status    |        3
+ lab1       | users     | idx_users_lower_email   |        1
+ public     | users     | idx_users_role          |        1
+ public     | animals   | idx_animals_status      |        1
+ public     | adoptions | idx_adoptions_user_id   |        1
+ lab1       | users     | idx_users_email         |        0
+ public     | users     | idx_users_email         |        0
+ public     | adoptions | adoptions_pkey          |        0
+ public     | adoptions | idx_adoptions_animal_id |        0
+ public     | users     | users_username_key      |        0
+ public     | users     | users_email_key         |        0
+ lab1       | users     | users_pkey              |        0
+ public     | animals   | idx_animals_shelter_id  |        0
+ public     | animals   | idx_animals_species     |        0
+(20 rows)
+

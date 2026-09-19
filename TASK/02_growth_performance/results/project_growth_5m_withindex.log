@@ -1,0 +1,32 @@
+GROWTH 5m WITHINDEX
+                                                                      QUERY PLAN                                                                      
+------------------------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on adoptions_growth  (cost=12.17..3516.92 rows=998 width=39) (actual time=0.381..7.195 rows=1000 loops=1)
+   Recheck Cond: (user_id = 2)
+   Heap Blocks: exact=1000
+   ->  Bitmap Index Scan on adoptions_growth_user_id_created_at_idx  (cost=0.00..11.92 rows=998 width=0) (actual time=0.250..0.251 rows=1000 loops=1)
+         Index Cond: (user_id = 2)
+ Planning Time: 0.926 ms
+ Execution Time: 7.454 ms
+(7 rows)
+
+                                                                      QUERY PLAN                                                                       
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on adoptions_growth  (cost=3057.79..49767.76 rows=224132 width=39) (actual time=13.006..89.543 rows=214317 loops=1)
+   Recheck Cond: ((created_at >= (now() - '30 days'::interval)) AND (created_at < now()))
+   Heap Blocks: exact=9524
+   ->  Bitmap Index Scan on adoptions_growth_created_at_idx  (cost=0.00..3001.76 rows=224132 width=0) (actual time=10.801..10.802 rows=214317 loops=1)
+         Index Cond: ((created_at >= (now() - '30 days'::interval)) AND (created_at < now()))
+ Planning Time: 0.258 ms
+ Execution Time: 97.862 ms
+(7 rows)
+
+                                                                              QUERY PLAN                                                                               
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=0.43..199.30 rows=50 width=39) (actual time=0.016..0.076 rows=50 loops=1)
+   ->  Index Scan using adoptions_growth_user_id_created_at_idx on adoptions_growth  (cost=0.43..3969.89 rows=998 width=39) (actual time=0.015..0.071 rows=50 loops=1)
+         Index Cond: (user_id = 2)
+ Planning Time: 0.343 ms
+ Execution Time: 0.137 ms
+(5 rows)
+

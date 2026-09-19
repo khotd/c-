@@ -1,0 +1,557 @@
+﻿=== API1 GET /api/adoptions?from&to  (date range -> pruning) ===
+                                                                            QUERY PLAN                                                                            
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=1268.49..1268.62 rows=50 width=28) (actual time=10.295..10.303 rows=50 loops=1)
+   Buffers: shared hit=3 read=242 written=242
+   ->  Sort  (cost=1268.49..1321.71 rows=21288 width=28) (actual time=10.293..10.296 rows=50 loops=1)
+         Sort Key: adoptions.created_at DESC
+         Sort Method: top-N heapsort  Memory: 30kB
+         Buffers: shared hit=3 read=242 written=242
+         ->  Seq Scan on adoptions_2026_03 adoptions  (cost=0.00..561.32 rows=21288 width=28) (actual time=0.038..6.410 rows=21288 loops=1)
+               Filter: ((created_at >= '2026-03-01 00:00:00'::timestamp without time zone) AND (created_at < '2026-04-01 00:00:00'::timestamp without time zone))
+               Buffers: shared read=242 written=242
+ Planning:
+   Buffers: shared hit=341 read=64 written=64
+ Planning Time: 3.773 ms
+ Execution Time: 10.387 ms
+(13 rows)
+
+=== API2 GET /api/adoptions/{id} analogue (by id, no date) ===
+                                                                          QUERY PLAN                                                                          
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Append  (cost=0.00..217.31 rows=38 width=66) (actual time=0.236..1.090 rows=1 loops=1)
+   Buffers: shared hit=2 read=51 written=51
+   ->  Seq Scan on adoptions_2024_01 adoptions_1  (cost=0.00..0.00 rows=1 width=138) (actual time=0.007..0.008 rows=0 loops=1)
+         Filter: (id = 1000)
+   ->  Seq Scan on adoptions_2024_02 adoptions_2  (cost=0.00..0.00 rows=1 width=138) (actual time=0.004..0.004 rows=0 loops=1)
+         Filter: (id = 1000)
+   ->  Seq Scan on adoptions_2024_03 adoptions_3  (cost=0.00..0.00 rows=1 width=138) (actual time=0.002..0.002 rows=0 loops=1)
+         Filter: (id = 1000)
+   ->  Seq Scan on adoptions_2024_04 adoptions_4  (cost=0.00..0.00 rows=1 width=138) (actual time=0.002..0.002 rows=0 loops=1)
+         Filter: (id = 1000)
+   ->  Seq Scan on adoptions_2024_05 adoptions_5  (cost=0.00..0.00 rows=1 width=138) (actual time=0.001..0.001 rows=0 loops=1)
+         Filter: (id = 1000)
+   ->  Seq Scan on adoptions_2024_06 adoptions_6  (cost=0.00..0.00 rows=1 width=138) (actual time=0.003..0.003 rows=0 loops=1)
+         Filter: (id = 1000)
+   ->  Seq Scan on adoptions_2024_07 adoptions_7  (cost=0.00..0.00 rows=1 width=138) (actual time=0.001..0.001 rows=0 loops=1)
+         Filter: (id = 1000)
+   ->  Seq Scan on adoptions_2024_08 adoptions_8  (cost=0.00..0.00 rows=1 width=138) (actual time=0.001..0.001 rows=0 loops=1)
+         Filter: (id = 1000)
+   ->  Index Scan using adoptions_2024_09_pkey on adoptions_2024_09 adoptions_9  (cost=0.29..8.30 rows=1 width=29) (actual time=0.035..0.035 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2024_10_pkey on adoptions_2024_10 adoptions_10  (cost=0.29..8.30 rows=1 width=29) (actual time=0.078..0.078 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2024_11_pkey on adoptions_2024_11 adoptions_11  (cost=0.29..8.30 rows=1 width=29) (actual time=0.044..0.044 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2024_12_pkey on adoptions_2024_12 adoptions_12  (cost=0.29..8.30 rows=1 width=28) (actual time=0.056..0.057 rows=1 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=3 written=3
+   ->  Index Scan using adoptions_2025_01_pkey on adoptions_2025_01 adoptions_13  (cost=0.29..8.30 rows=1 width=29) (actual time=0.039..0.040 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2025_02_pkey on adoptions_2025_02 adoptions_14  (cost=0.29..8.30 rows=1 width=28) (actual time=0.032..0.032 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2025_03_pkey on adoptions_2025_03 adoptions_15  (cost=0.29..8.30 rows=1 width=28) (actual time=0.052..0.052 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2025_04_pkey on adoptions_2025_04 adoptions_16  (cost=0.29..8.30 rows=1 width=29) (actual time=0.043..0.043 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2025_05_pkey on adoptions_2025_05 adoptions_17  (cost=0.29..8.30 rows=1 width=29) (actual time=0.043..0.043 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2025_06_pkey on adoptions_2025_06 adoptions_18  (cost=0.29..8.30 rows=1 width=28) (actual time=0.032..0.032 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2025_07_pkey on adoptions_2025_07 adoptions_19  (cost=0.29..8.30 rows=1 width=28) (actual time=0.027..0.027 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2025_08_pkey on adoptions_2025_08 adoptions_20  (cost=0.29..8.30 rows=1 width=29) (actual time=0.027..0.027 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2025_09_pkey on adoptions_2025_09 adoptions_21  (cost=0.29..8.30 rows=1 width=28) (actual time=0.040..0.040 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2025_10_pkey on adoptions_2025_10 adoptions_22  (cost=0.29..8.30 rows=1 width=29) (actual time=0.056..0.056 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2025_11_pkey on adoptions_2025_11 adoptions_23  (cost=0.29..8.30 rows=1 width=29) (actual time=0.028..0.028 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2025_12_pkey on adoptions_2025_12 adoptions_24  (cost=0.29..8.30 rows=1 width=28) (actual time=0.028..0.028 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2026_01_pkey on adoptions_2026_01 adoptions_25  (cost=0.29..8.30 rows=1 width=29) (actual time=0.053..0.053 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2026_02_pkey on adoptions_2026_02 adoptions_26  (cost=0.29..8.30 rows=1 width=28) (actual time=0.051..0.051 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2026_03_pkey on adoptions_2026_03 adoptions_27  (cost=0.29..8.30 rows=1 width=28) (actual time=0.028..0.028 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2026_04_pkey on adoptions_2026_04 adoptions_28  (cost=0.29..8.30 rows=1 width=28) (actual time=0.042..0.042 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2026_05_pkey on adoptions_2026_05 adoptions_29  (cost=0.29..8.30 rows=1 width=28) (actual time=0.029..0.029 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2026_06_pkey on adoptions_2026_06 adoptions_30  (cost=0.29..8.30 rows=1 width=28) (actual time=0.030..0.030 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2026_07_pkey on adoptions_2026_07 adoptions_31  (cost=0.29..8.30 rows=1 width=29) (actual time=0.029..0.030 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2026_08_pkey on adoptions_2026_08 adoptions_32  (cost=0.29..8.30 rows=1 width=28) (actual time=0.044..0.044 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Index Scan using adoptions_2026_09_pkey on adoptions_2026_09 adoptions_33  (cost=0.28..8.30 rows=1 width=29) (actual time=0.068..0.068 rows=0 loops=1)
+         Index Cond: (id = 1000)
+         Buffers: shared read=2 written=2
+   ->  Seq Scan on adoptions_2026_10 adoptions_34  (cost=0.00..0.00 rows=1 width=138) (actual time=0.005..0.005 rows=0 loops=1)
+         Filter: (id = 1000)
+   ->  Seq Scan on adoptions_2026_11 adoptions_35  (cost=0.00..0.00 rows=1 width=138) (actual time=0.002..0.002 rows=0 loops=1)
+         Filter: (id = 1000)
+   ->  Bitmap Heap Scan on adoptions_2026_12 adoptions_36  (cost=4.16..9.50 rows=2 width=138) (actual time=0.007..0.007 rows=0 loops=1)
+         Recheck Cond: (id = 1000)
+         Buffers: shared hit=2
+         ->  Bitmap Index Scan on adoptions_2026_12_pkey  (cost=0.00..4.16 rows=2 width=0) (actual time=0.004..0.004 rows=0 loops=1)
+               Index Cond: (id = 1000)
+               Buffers: shared hit=2
+   ->  Seq Scan on adoptions_default adoptions_37  (cost=0.00..0.00 rows=1 width=138) (actual time=0.002..0.002 rows=0 loops=1)
+         Filter: (id = 1000)
+ Planning:
+   Buffers: shared hit=3161 read=194 dirtied=7 written=194
+ Planning Time: 29.822 ms
+ Execution Time: 1.606 ms
+(109 rows)
+
+=== API3 GET /api/adoptions/stats/by-status (aggregation, weak pruning) ===
+                                                                                                       QUERY PLAN                                                                                                        
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=10586.74..10586.75 rows=4 width=17) (actual time=55.829..59.173 rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=36 read=510 written=510
+   ->  Finalize GroupAggregate  (cost=10585.69..10586.70 rows=4 width=17) (actual time=55.789..59.136 rows=4 loops=1)
+         Group Key: adoptions.status
+         Buffers: shared hit=33 read=510 written=510
+         ->  Gather Merge  (cost=10585.69..10586.62 rows=8 width=17) (actual time=55.779..59.125 rows=12 loops=1)
+               Workers Planned: 2
+               Workers Launched: 2
+               Buffers: shared hit=33 read=510 written=510
+               ->  Sort  (cost=9585.67..9585.68 rows=4 width=17) (actual time=47.254..47.262 rows=4 loops=3)
+                     Sort Key: adoptions.status
+                     Sort Method: quicksort  Memory: 25kB
+                     Buffers: shared hit=33 read=510 written=510
+                     Worker 0:  Sort Method: quicksort  Memory: 25kB
+                     Worker 1:  Sort Method: quicksort  Memory: 25kB
+                     ->  Partial HashAggregate  (cost=9585.59..9585.63 rows=4 width=17) (actual time=47.174..47.182 rows=4 loops=3)
+                           Group Key: adoptions.status
+                           Batches: 1  Memory Usage: 24kB
+                           Buffers: shared hit=17 read=510 written=510
+                           Worker 0:  Batches: 1  Memory Usage: 24kB
+                           Worker 1:  Batches: 1  Memory Usage: 24kB
+                           ->  Parallel Append  (cost=0.00..8543.07 rows=208504 width=9) (actual time=0.100..25.282 rows=166667 loops=3)
+                                 Buffers: shared hit=17 read=510 written=510
+                                 ->  Seq Scan on adoptions_2024_01 adoptions_1  (cost=0.00..0.00 rows=1 width=118) (actual time=0.017..0.017 rows=0 loops=1)
+                                 ->  Seq Scan on adoptions_2024_02 adoptions_2  (cost=0.00..0.00 rows=1 width=118) (actual time=0.004..0.004 rows=0 loops=1)
+                                 ->  Seq Scan on adoptions_2024_03 adoptions_3  (cost=0.00..0.00 rows=1 width=118) (actual time=0.006..0.006 rows=0 loops=1)
+                                 ->  Seq Scan on adoptions_2024_04 adoptions_4  (cost=0.00..0.00 rows=1 width=118) (actual time=0.006..0.006 rows=0 loops=1)
+                                 ->  Seq Scan on adoptions_2024_05 adoptions_5  (cost=0.00..0.00 rows=1 width=118) (actual time=0.003..0.004 rows=0 loops=1)
+                                 ->  Seq Scan on adoptions_2024_06 adoptions_6  (cost=0.00..0.00 rows=1 width=118) (actual time=0.003..0.003 rows=0 loops=1)
+                                 ->  Seq Scan on adoptions_2024_07 adoptions_7  (cost=0.00..0.00 rows=1 width=118) (actual time=0.004..0.004 rows=0 loops=1)
+                                 ->  Seq Scan on adoptions_2024_08 adoptions_8  (cost=0.00..0.00 rows=1 width=118) (actual time=0.003..0.003 rows=0 loops=1)
+                                 ->  Seq Scan on adoptions_2026_10 adoptions_34  (cost=0.00..0.00 rows=1 width=118) (actual time=0.006..0.006 rows=0 loops=1)
+                                 ->  Seq Scan on adoptions_2026_11 adoptions_35  (cost=0.00..0.00 rows=1 width=118) (actual time=0.003..0.003 rows=0 loops=1)
+                                 ->  Seq Scan on adoptions_default adoptions_37  (cost=0.00..0.00 rows=1 width=118) (actual time=0.004..0.004 rows=0 loops=1)
+                                 ->  Parallel Index Only Scan using adoptions_2024_12_status_idx on adoptions_2024_12 adoptions_12  (cost=0.29..322.09 rows=12638 width=8) (actual time=0.067..1.711 rows=21485 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared hit=1 read=22 written=22
+                                 ->  Parallel Index Only Scan using adoptions_2025_12_status_idx on adoptions_2025_12 adoptions_24  (cost=0.29..321.07 rows=12583 width=8) (actual time=0.085..1.733 rows=21391 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared hit=1 read=22 written=22
+                                 ->  Parallel Index Only Scan using adoptions_2026_03_status_idx on adoptions_2026_03 adoptions_27  (cost=0.29..319.95 rows=12522 width=8) (actual time=0.090..1.881 rows=21288 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared hit=1 read=22 written=22
+                                 ->  Parallel Index Only Scan using adoptions_2025_10_status_idx on adoptions_2025_10 adoptions_22  (cost=0.29..319.87 rows=12518 width=9) (actual time=0.088..1.699 rows=21281 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared hit=1 read=22 written=22
+                                 ->  Parallel Index Only Scan using adoptions_2026_01_status_idx on adoptions_2026_01 adoptions_25  (cost=0.29..319.50 rows=12498 width=9) (actual time=0.128..1.673 rows=21247 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared hit=1 read=22 written=22
+                                 ->  Parallel Index Only Scan using adoptions_2026_07_status_idx on adoptions_2026_07 adoptions_31  (cost=0.29..318.98 rows=12470 width=9) (actual time=0.071..1.639 rows=21199 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared hit=1 read=22 written=22
+                                 ->  Parallel Index Only Scan using adoptions_2026_05_status_idx on adoptions_2026_05 adoptions_29  (cost=0.29..318.88 rows=12465 width=8) (actual time=0.078..1.706 rows=21190 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared hit=1 read=22 written=22
+                                 ->  Parallel Index Only Scan using adoptions_2025_08_status_idx on adoptions_2025_08 adoptions_20  (cost=0.29..318.81 rows=12461 width=9) (actual time=0.064..1.615 rows=21183 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared hit=1 read=22 written=22
+                                 ->  Parallel Index Only Scan using adoptions_2025_05_status_idx on adoptions_2025_05 adoptions_17  (cost=0.29..318.66 rows=12452 width=9) (actual time=0.067..1.970 rows=21169 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared hit=1 read=22 written=22
+                                 ->  Parallel Index Only Scan using adoptions_2025_03_status_idx on adoptions_2025_03 adoptions_15  (cost=0.29..318.60 rows=12449 width=8) (actual time=0.057..1.625 rows=21164 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared hit=1 read=22 written=22
+                                 ->  Parallel Index Only Scan using adoptions_2025_01_status_idx on adoptions_2025_01 adoptions_13  (cost=0.29..318.32 rows=12434 width=9) (actual time=0.077..1.943 rows=21138 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared hit=1 read=22 written=22
+                                 ->  Parallel Index Only Scan using adoptions_2024_10_status_idx on adoptions_2024_10 adoptions_10  (cost=0.29..318.17 rows=12426 width=9) (actual time=0.107..1.656 rows=21124 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared hit=1 read=22 written=22
+                                 ->  Parallel Index Only Scan using adoptions_2026_08_status_idx on adoptions_2026_08 adoptions_32  (cost=0.29..317.87 rows=12410 width=8) (actual time=0.061..1.684 rows=21097 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared hit=1 read=22 written=22
+                                 ->  Parallel Index Only Scan using adoptions_2025_07_status_idx on adoptions_2025_07 adoptions_19  (cost=0.29..317.83 rows=12408 width=8) (actual time=0.143..1.809 rows=21093 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared hit=1 read=22 written=22
+                                 ->  Parallel Index Only Scan using adoptions_2026_06_status_idx on adoptions_2026_06 adoptions_30  (cost=0.29..309.89 rows=12195 width=8) (actual time=0.154..0.681 rows=6910 loops=3)
+                                       Heap Fetches: 0
+                                       Buffers: shared hit=3 read=21 written=21
+                                 ->  Parallel Index Only Scan using adoptions_2026_04_status_idx on adoptions_2026_04 adoptions_28  (cost=0.29..308.54 rows=12122 width=8) (actual time=0.085..1.575 rows=20607 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared read=21 written=21
+                                 ->  Parallel Index Only Scan using adoptions_2025_11_status_idx on adoptions_2025_11 adoptions_23  (cost=0.29..308.31 rows=12109 width=9) (actual time=0.092..1.652 rows=20586 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared read=21 written=21
+                                 ->  Parallel Index Only Scan using adoptions_2025_06_status_idx on adoptions_2025_06 adoptions_18  (cost=0.29..303.38 rows=12059 width=8) (actual time=0.094..1.530 rows=20500 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared read=20 written=20
+                                 ->  Parallel Index Only Scan using adoptions_2025_04_status_idx on adoptions_2025_04 adoptions_16  (cost=0.29..302.03 rows=11986 width=9) (actual time=0.066..1.477 rows=20376 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared read=20 written=20
+                                 ->  Parallel Index Only Scan using adoptions_2025_09_status_idx on adoptions_2025_09 adoptions_21  (cost=0.29..301.08 rows=11935 width=8) (actual time=0.079..1.881 rows=20289 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared read=20 written=20
+                                 ->  Parallel Index Only Scan using adoptions_2024_11_status_idx on adoptions_2024_11 adoptions_11  (cost=0.29..298.41 rows=12006 width=9) (actual time=0.058..1.594 rows=20411 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared read=19 written=19
+                                 ->  Parallel Index Only Scan using adoptions_2026_02_status_idx on adoptions_2026_02 adoptions_26  (cost=0.29..280.30 rows=11244 width=8) (actual time=0.071..1.393 rows=19115 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared read=18 written=18
+                                 ->  Parallel Index Only Scan using adoptions_2025_02_status_idx on adoptions_2025_02 adoptions_14  (cost=0.29..279.76 rows=11215 width=8) (actual time=0.080..1.915 rows=19065 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared read=18 written=18
+                                 ->  Parallel Index Only Scan using adoptions_2024_09_status_idx on adoptions_2024_09 adoptions_9  (cost=0.29..205.68 rows=8075 width=9) (actual time=0.065..1.359 rows=13728 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared read=14 written=14
+                                 ->  Parallel Index Only Scan using adoptions_2026_09_status_idx on adoptions_2026_09 adoptions_33  (cost=0.28..122.38 rows=4438 width=9) (actual time=0.083..0.679 rows=7544 loops=1)
+                                       Heap Fetches: 0
+                                       Buffers: shared read=10 written=10
+                                 ->  Parallel Seq Scan on adoptions_2026_12 adoptions_36  (cost=0.00..12.24 rows=224 width=118) (actual time=0.001..0.001 rows=0 loops=1)
+ Planning:
+   Buffers: shared hit=68 read=4 written=4
+ Planning Time: 0.887 ms
+ Execution Time: 59.752 ms
+(116 rows)
+
+=== API3b stats with date window (pruning helps) ===
+                                                                            QUERY PLAN                                                                            
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ HashAggregate  (cost=2243.25..2243.29 rows=4 width=16) (actual time=34.508..34.511 rows=4 loops=1)
+   Group Key: adoptions.status
+   Batches: 1  Memory Usage: 24kB
+   Buffers: shared read=702 written=223
+   ->  Append  (cost=0.00..1935.00 rows=61650 width=8) (actual time=0.055..25.099 rows=61650 loops=1)
+         Buffers: shared read=702 written=223
+         ->  Seq Scan on adoptions_2026_01 adoptions_1  (cost=0.00..560.70 rows=21247 width=9) (actual time=0.054..4.400 rows=21247 loops=1)
+               Filter: ((created_at >= '2026-01-01 00:00:00'::timestamp without time zone) AND (created_at < '2026-04-01 00:00:00'::timestamp without time zone))
+               Buffers: shared read=242 written=72
+         ->  Seq Scan on adoptions_2026_02 adoptions_2  (cost=0.00..504.72 rows=19115 width=8) (actual time=0.017..3.676 rows=19115 loops=1)
+               Filter: ((created_at >= '2026-01-01 00:00:00'::timestamp without time zone) AND (created_at < '2026-04-01 00:00:00'::timestamp without time zone))
+               Buffers: shared read=218 written=22
+         ->  Seq Scan on adoptions_2026_03 adoptions_3  (cost=0.00..561.32 rows=21288 width=8) (actual time=0.013..12.762 rows=21288 loops=1)
+               Filter: ((created_at >= '2026-01-01 00:00:00'::timestamp without time zone) AND (created_at < '2026-04-01 00:00:00'::timestamp without time zone))
+               Buffers: shared read=242 written=129
+ Planning Time: 0.183 ms
+ Execution Time: 34.541 ms
+(17 rows)
+
+=== API users/{id}/adoptions (JOIN + user filter) ===
+                                                                                         QUERY PLAN                                                                                         
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=1266.36..1266.48 rows=50 width=455) (actual time=4.736..4.767 rows=50 loops=1)
+   Buffers: shared hit=131 read=295 written=221
+   ->  Sort  (cost=1266.36..1266.64 rows=112 width=455) (actual time=4.735..4.762 rows=50 loops=1)
+         Sort Key: ad.created_at DESC
+         Sort Method: quicksort  Memory: 37kB
+         Buffers: shared hit=131 read=295 written=221
+         ->  Nested Loop  (cost=0.72..1262.64 rows=112 width=455) (actual time=0.303..4.701 rows=92 loops=1)
+               Buffers: shared hit=131 read=295 written=221
+               ->  Nested Loop  (cost=0.57..1259.40 rows=112 width=41) (actual time=0.175..4.481 rows=92 loops=1)
+                     Buffers: shared hit=129 read=293 written=219
+                     ->  Index Scan using users_pkey on users u  (cost=0.28..8.30 rows=1 width=12) (actual time=0.058..0.060 rows=1 loops=1)
+                           Index Cond: (id = 2)
+                           Buffers: shared read=3 written=2
+                     ->  Nested Loop  (cost=0.29..1249.98 rows=112 width=37) (actual time=0.096..4.380 rows=92 loops=1)
+                           Buffers: shared hit=129 read=290 written=217
+                           ->  Append  (cost=0.00..475.54 rows=112 width=20) (actual time=0.063..2.112 rows=92 loops=1)
+                                 Buffers: shared hit=15 read=128 written=96
+                                 ->  Seq Scan on adoptions_2024_01 ad_1  (cost=0.00..0.00 rows=1 width=20) (actual time=0.002..0.002 rows=0 loops=1)
+                                       Filter: (user_id = 2)
+                                 ->  Seq Scan on adoptions_2024_02 ad_2  (cost=0.00..0.00 rows=1 width=20) (actual time=0.003..0.003 rows=0 loops=1)
+                                       Filter: (user_id = 2)
+                                 ->  Seq Scan on adoptions_2024_03 ad_3  (cost=0.00..0.00 rows=1 width=20) (actual time=0.001..0.001 rows=0 loops=1)
+                                       Filter: (user_id = 2)
+                                 ->  Seq Scan on adoptions_2024_04 ad_4  (cost=0.00..0.00 rows=1 width=20) (actual time=0.001..0.001 rows=0 loops=1)
+                                       Filter: (user_id = 2)
+                                 ->  Seq Scan on adoptions_2024_05 ad_5  (cost=0.00..0.00 rows=1 width=20) (actual time=0.001..0.001 rows=0 loops=1)
+                                       Filter: (user_id = 2)
+                                 ->  Seq Scan on adoptions_2024_06 ad_6  (cost=0.00..0.00 rows=1 width=20) (actual time=0.002..0.003 rows=0 loops=1)
+                                       Filter: (user_id = 2)
+                                 ->  Seq Scan on adoptions_2024_07 ad_7  (cost=0.00..0.00 rows=1 width=20) (actual time=0.001..0.001 rows=0 loops=1)
+                                       Filter: (user_id = 2)
+                                 ->  Seq Scan on adoptions_2024_08 ad_8  (cost=0.00..0.00 rows=1 width=20) (actual time=0.001..0.001 rows=0 loops=1)
+                                       Filter: (user_id = 2)
+                                 ->  Bitmap Heap Scan on adoptions_2024_09 ad_9  (cost=4.31..15.10 rows=3 width=20) (actual time=0.049..0.062 rows=2 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=2
+                                       Buffers: shared read=4 written=3
+                                       ->  Bitmap Index Scan on adoptions_2024_09_user_id_status_created_at_idx  (cost=0.00..4.31 rows=3 width=0) (actual time=0.035..0.035 rows=2 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=2
+                                 ->  Bitmap Heap Scan on adoptions_2024_10 ad_10  (cost=4.32..18.82 rows=4 width=20) (actual time=0.072..0.102 rows=4 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=4
+                                       Buffers: shared read=6 written=5
+                                       ->  Bitmap Index Scan on adoptions_2024_10_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.041..0.041 rows=4 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=1
+                                 ->  Bitmap Heap Scan on adoptions_2024_11 ad_11  (cost=4.32..18.79 rows=4 width=20) (actual time=0.037..0.083 rows=6 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=6
+                                       Buffers: shared read=8 written=5
+                                       ->  Bitmap Index Scan on adoptions_2024_11_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.027..0.027 rows=6 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=1
+                                 ->  Bitmap Heap Scan on adoptions_2024_12 ad_12  (cost=4.32..18.84 rows=4 width=20) (actual time=0.077..0.078 rows=1 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=1
+                                       Buffers: shared read=3 written=2
+                                       ->  Bitmap Index Scan on adoptions_2024_12_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.064..0.064 rows=1 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=1
+                                 ->  Bitmap Heap Scan on adoptions_2025_01 ad_13  (cost=4.32..18.82 rows=4 width=20) (actual time=0.089..0.125 rows=3 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=3
+                                       Buffers: shared read=5 written=5
+                                       ->  Bitmap Index Scan on adoptions_2025_01_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.069..0.069 rows=3 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=2
+                                 ->  Bitmap Heap Scan on adoptions_2025_02 ad_14  (cost=4.32..18.74 rows=4 width=20) (actual time=0.036..0.037 rows=1 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=1
+                                       Buffers: shared read=3 written=3
+                                       ->  Bitmap Index Scan on adoptions_2025_02_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.023..0.023 rows=1 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=2
+                                 ->  Bitmap Heap Scan on adoptions_2025_03 ad_15  (cost=4.32..18.82 rows=4 width=20) (actual time=0.068..0.069 rows=1 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=1
+                                       Buffers: shared read=3 written=2
+                                       ->  Bitmap Index Scan on adoptions_2025_03_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.041..0.042 rows=1 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=1
+                                 ->  Bitmap Heap Scan on adoptions_2025_04 ad_16  (cost=4.32..18.79 rows=4 width=20) (actual time=0.027..0.027 rows=1 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=1
+                                       Buffers: shared read=3 written=2
+                                       ->  Bitmap Index Scan on adoptions_2025_04_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.013..0.013 rows=1 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=1
+                                 ->  Bitmap Heap Scan on adoptions_2025_05 ad_17  (cost=4.32..18.82 rows=4 width=20) (actual time=0.059..0.069 rows=2 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=2
+                                       Buffers: shared read=4 written=3
+                                       ->  Bitmap Index Scan on adoptions_2025_05_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.043..0.043 rows=2 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=1
+                                 ->  Bitmap Heap Scan on adoptions_2025_06 ad_18  (cost=4.32..18.80 rows=4 width=20) (actual time=0.058..0.106 rows=5 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=5
+                                       Buffers: shared read=7 written=5
+                                       ->  Bitmap Index Scan on adoptions_2025_06_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.043..0.043 rows=5 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=2
+                                 ->  Bitmap Heap Scan on adoptions_2025_07 ad_19  (cost=4.32..18.82 rows=4 width=20) (actual time=0.040..0.085 rows=6 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=6
+                                       Buffers: shared read=8 written=6
+                                       ->  Bitmap Index Scan on adoptions_2025_07_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.024..0.024 rows=6 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=1
+                                 ->  Bitmap Heap Scan on adoptions_2025_08 ad_20  (cost=4.32..18.82 rows=4 width=20) (actual time=0.092..0.120 rows=3 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=3
+                                       Buffers: shared read=5 written=3
+                                       ->  Bitmap Index Scan on adoptions_2025_08_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.064..0.064 rows=3 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=1
+                                 ->  Bitmap Heap Scan on adoptions_2025_09 ad_21  (cost=4.32..18.79 rows=4 width=20) (actual time=0.046..0.057 rows=2 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=2
+                                       Buffers: shared read=4 written=3
+                                       ->  Bitmap Index Scan on adoptions_2025_09_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.031..0.031 rows=2 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=1
+                                 ->  Bitmap Heap Scan on adoptions_2025_10 ad_22  (cost=4.32..18.83 rows=4 width=20) (actual time=0.036..0.071 rows=5 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=5
+                                       Buffers: shared read=7 written=4
+                                       ->  Bitmap Index Scan on adoptions_2025_10_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.023..0.023 rows=5 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=1
+                                 ->  Bitmap Heap Scan on adoptions_2025_11 ad_23  (cost=4.32..18.80 rows=4 width=20) (actual time=0.083..0.104 rows=3 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=3
+                                       Buffers: shared read=5 written=3
+                                       ->  Bitmap Index Scan on adoptions_2025_11_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.057..0.058 rows=3 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=1
+                                 ->  Bitmap Heap Scan on adoptions_2025_12 ad_24  (cost=4.32..18.83 rows=4 width=20) (actual time=0.046..0.115 rows=6 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=6
+                                       Buffers: shared read=8 written=7
+                                       ->  Bitmap Index Scan on adoptions_2025_12_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.031..0.031 rows=6 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=2
+                                 ->  Bitmap Heap Scan on adoptions_2026_01 ad_25  (cost=4.32..18.83 rows=4 width=20) (actual time=0.033..0.041 rows=6 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=6
+                                       Buffers: shared hit=6 read=2 written=2
+                                       ->  Bitmap Index Scan on adoptions_2026_01_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.029..0.029 rows=6 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=2
+                                 ->  Bitmap Heap Scan on adoptions_2026_02 ad_26  (cost=4.32..18.74 rows=4 width=20) (actual time=0.041..0.046 rows=3 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=3
+                                       Buffers: shared hit=3 read=2 written=1
+                                       ->  Bitmap Index Scan on adoptions_2026_02_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.038..0.038 rows=3 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=1
+                                 ->  Bitmap Heap Scan on adoptions_2026_03 ad_27  (cost=4.32..18.83 rows=4 width=20) (actual time=0.031..0.037 rows=4 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=4
+                                       Buffers: shared hit=4 read=2 written=2
+                                       ->  Bitmap Index Scan on adoptions_2026_03_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.028..0.028 rows=4 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=2
+                                 ->  Bitmap Heap Scan on adoptions_2026_04 ad_28  (cost=4.32..18.80 rows=4 width=20) (actual time=0.065..0.086 rows=4 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=3
+                                       Buffers: shared read=5 written=4
+                                       ->  Bitmap Index Scan on adoptions_2026_04_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.035..0.035 rows=4 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=1
+                                 ->  Bitmap Heap Scan on adoptions_2026_05 ad_29  (cost=4.32..18.82 rows=4 width=20) (actual time=0.057..0.110 rows=6 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=6
+                                       Buffers: shared read=8 written=5
+                                       ->  Bitmap Index Scan on adoptions_2026_05_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.040..0.040 rows=6 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=2
+                                 ->  Bitmap Heap Scan on adoptions_2026_06 ad_30  (cost=4.32..18.81 rows=4 width=20) (actual time=0.046..0.071 rows=4 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=4
+                                       Buffers: shared read=6 written=5
+                                       ->  Bitmap Index Scan on adoptions_2026_06_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.035..0.035 rows=4 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=2
+                                 ->  Bitmap Heap Scan on adoptions_2026_07 ad_31  (cost=4.32..18.82 rows=4 width=20) (actual time=0.037..0.106 rows=6 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=6
+                                       Buffers: shared read=8 written=7
+                                       ->  Bitmap Index Scan on adoptions_2026_07_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.024..0.024 rows=6 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=2
+                                 ->  Bitmap Heap Scan on adoptions_2026_08 ad_32  (cost=4.32..18.82 rows=4 width=20) (actual time=0.137..0.168 rows=4 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=4
+                                       Buffers: shared read=6 written=5
+                                       ->  Bitmap Index Scan on adoptions_2026_08_user_id_status_created_at_idx  (cost=0.00..4.32 rows=4 width=0) (actual time=0.118..0.118 rows=4 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=2
+                                 ->  Bitmap Heap Scan on adoptions_2026_09 ad_33  (cost=4.31..17.78 rows=4 width=20) (actual time=0.048..0.074 rows=4 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Heap Blocks: exact=4
+                                       Buffers: shared read=6 written=4
+                                       ->  Bitmap Index Scan on adoptions_2026_09_user_id_status_created_at_idx  (cost=0.00..4.31 rows=4 width=0) (actual time=0.033..0.034 rows=4 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared read=2 written=2
+                                 ->  Seq Scan on adoptions_2026_10 ad_34  (cost=0.00..0.00 rows=1 width=20) (actual time=0.004..0.004 rows=0 loops=1)
+                                       Filter: (user_id = 2)
+                                 ->  Seq Scan on adoptions_2026_11 ad_35  (cost=0.00..0.00 rows=1 width=20) (actual time=0.001..0.001 rows=0 loops=1)
+                                       Filter: (user_id = 2)
+                                 ->  Bitmap Heap Scan on adoptions_2026_12 ad_36  (cost=4.16..9.50 rows=2 width=20) (actual time=0.006..0.006 rows=0 loops=1)
+                                       Recheck Cond: (user_id = 2)
+                                       Buffers: shared hit=2
+                                       ->  Bitmap Index Scan on adoptions_2026_12_user_id_status_created_at_idx  (cost=0.00..4.16 rows=2 width=0) (actual time=0.005..0.005 rows=0 loops=1)
+                                             Index Cond: (user_id = 2)
+                                             Buffers: shared hit=2
+                                 ->  Seq Scan on adoptions_default ad_37  (cost=0.00..0.00 rows=1 width=20) (actual time=0.002..0.002 rows=0 loops=1)
+                                       Filter: (user_id = 2)
+                           ->  Index Scan using animals_pkey on animals a  (cost=0.29..6.91 rows=1 width=25) (actual time=0.024..0.024 rows=1 loops=92)
+                                 Index Cond: (id = ad.animal_id)
+                                 Buffers: shared hit=114 read=162 written=121
+               ->  Memoize  (cost=0.15..0.17 rows=1 width=422) (actual time=0.002..0.002 rows=1 loops=92)
+                     Cache Key: a.shelter_id
+                     Cache Mode: logical
+                     Hits: 90  Misses: 2  Evictions: 0  Overflows: 0  Memory Usage: 1kB
+                     Buffers: shared hit=2 read=2 written=2
+                     ->  Index Scan using shelters_pkey on shelters s  (cost=0.14..0.16 rows=1 width=422) (actual time=0.063..0.063 rows=1 loops=2)
+                           Index Cond: (id = a.shelter_id)
+                           Buffers: shared hit=2 read=2 written=2
+ Planning:
+   Buffers: shared hit=362 read=26 dirtied=4 written=20
+ Planning Time: 4.740 ms
+ Execution Time: 5.666 ms
+(235 rows)
+
+=== Which partitions exist ===
+  partition_name   
+-------------------
+ adoptions_2024_01
+ adoptions_2024_02
+ adoptions_2024_03
+ adoptions_2024_04
+ adoptions_2024_05
+ adoptions_2024_06
+ adoptions_2024_07
+ adoptions_2024_08
+ adoptions_2024_09
+ adoptions_2024_10
+ adoptions_2024_11
+ adoptions_2024_12
+ adoptions_2025_01
+ adoptions_2025_02
+ adoptions_2025_03
+ adoptions_2025_04
+ adoptions_2025_05
+ adoptions_2025_06
+ adoptions_2025_07
+ adoptions_2025_08
+ adoptions_2025_09
+ adoptions_2025_10
+ adoptions_2025_11
+ adoptions_2025_12
+ adoptions_2026_01
+ adoptions_2026_02
+ adoptions_2026_03
+ adoptions_2026_04
+ adoptions_2026_05
+ adoptions_2026_06
+ adoptions_2026_07
+ adoptions_2026_08
+ adoptions_2026_09
+ adoptions_2026_10
+ adoptions_2026_11
+ adoptions_2026_12
+ adoptions_default
+(37 rows)
+

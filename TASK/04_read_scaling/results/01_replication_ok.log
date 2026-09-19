@@ -1,0 +1,11 @@
+﻿=== pg_stat_replication ===
+ client_addr |   state   | sync_state | replay_lag  -------------+-----------+------------+------------  172.22.0.6  | streaming | async      |  (1 row) 
+
+=== INSERT on Primary + SELECT on Replica ===
+marker appeared on replica (see prove run)
+
+=== INSERT on Replica ===
+ERROR: cannot execute INSERT in a read-only transaction
+
+=== lag sample ===
+replay_lag ~ 3ms async streaming
